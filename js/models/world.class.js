@@ -185,7 +185,7 @@ class World {
    * @param {Endboss} endboss 
    */
   handleEndbossDamage(endboss) {
-    if (this.endbossHitCount % 3 === 0) {
+    if (this.endbossHitCount % 2 === 0) {
       endboss.energy -= 20;
       if (endboss.energy < 0) endboss.energy = 0;
       if (this.endbossStatusBar) {
