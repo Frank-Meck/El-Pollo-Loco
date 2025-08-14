@@ -1,0 +1,84 @@
+/* --- Mobile Controls --- */
+/* Standard: unsichtbar */
+.mobile_controls {
+  display: none;
+}
+
+
+.rotate_content{
+display:flex;
+text-align:center;
+
+}
+.mobile_info{
+  font-size: 36px;
+}
+
+
+
+@media (max-width: 1024px) {
+  .mobile_controls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 20px;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  .mobile_controls .control_group {
+    display: flex;
+    gap: 20px;
+    pointer-events: auto;
+  }
+  /* Rest wie gehabt … */
+}
+
+  .left_controls {
+    flex: 1;
+    justify-content: flex-start;
+  }
+  .right_controls {
+    flex: 1;
+    justify-content: flex-end;
+  }
+  .mobile_controls button {
+    background: rgba(255, 102, 0, 0.9);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    height: 55px;
+    width: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    padding: 15px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  .mobile_controls button:hover {
+    background: rgba(255, 102, 0, 0.9);
+    box-shadow: 0 0 12px 3px rgba(255, 69, 0, 0.7);
+  }
+
+
+
+.canvas_container {
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  height: 100vh;          
+}
+
+.canvas {
+  width: 100%;            
+  max-width: 800px;       
+  height: 480px;          
+  background-color: #fff; 
+  border: 1px solid #ccc; 
+  box-sizing: border-box; 
+}

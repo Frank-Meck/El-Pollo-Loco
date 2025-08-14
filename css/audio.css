@@ -1,0 +1,81 @@
+.btn_volume {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 165, 0, 0.85);
+    color: white;
+    border: 3px solid #ff6600;
+    border-radius: 50%;
+    padding: 10px 14px;
+    font-size: 26px;
+    cursor: pointer;
+    font-family:'zabras', Arial, Helvetica, sans-serif;
+    box-shadow: 4px 4px 0 #cc4a00;
+    z-index: 10001;
+    transition: all 0.2s ease;
+}
+
+.btn_volume:hover {
+    background: rgba(255, 102, 0, 0.9);
+    box-shadow: 0 0 12px 3px rgba(255, 69, 0, 0.7);
+    transform: translateX(-50%) scale(1.05);
+}
+
+.audio_controls {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10001;
+}
+
+.audio_controls button {
+    background: linear-gradient(45deg, #ff9966, #ff5e62);
+    border: 3px solid #ff6600;
+    border-radius: 50%;
+    color: white;
+    font-size: 26px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-family: 'zabras', Arial, Helvetica, sans-serif;
+    box-shadow: 3px 3px 0 #cc4a00;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.audio_controls button:hover {
+    background: linear-gradient(45deg, #ff7f50, #ff4500);
+    transform: scale(1.1);
+}
+
+.audio_controls input[type=range] {
+    /*-webkit-appearance: none;*/
+    width: 100px;
+    height: 8px;
+    background: #ffcc99;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+.audio_controls input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #ff6600;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.audio_controls input[type=range]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #ff6600;
+    border-radius: 50%;
+    cursor: pointer;
+}
