@@ -72,10 +72,10 @@ World.prototype.isCharacterStompingEnemy = function (enemy) {
   const horizontallyAligned = this.character.x + this.character.width > enemy.x &&
     this.character.x < enemy.x + enemy.width;
 
-  const verticallyAbove = this.character.lastY + this.character.height <= enemy.y + 40;
+  const verticallyAbove = this.character.lastY + this.character.height <= enemy.y + 20;
 
   const standsOnTop = this.character.y + this.character.height >= enemy.y &&
-    this.character.y + this.character.height <= enemy.y + 40 &&
+    this.character.y + this.character.height <= enemy.y + 20 &&
     horizontallyAligned;
 
   const isFalling = this.character.speedY < 0;
