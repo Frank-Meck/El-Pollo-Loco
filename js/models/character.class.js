@@ -45,6 +45,19 @@ class Character extends MoveableObject {
         './img/2_character_pepe/5_dead_2/D-E7.png'
     ];
 
+    IMAGES_CHILL = [
+          './img/2_character_pepe/1_idle/idle/I-1.png',
+          './img/2_character_pepe/1_idle/idle/I-2.png',
+          './img/2_character_pepe/1_idle/idle/I-3.png',
+          './img/2_character_pepe/1_idle/idle/I-4.png',
+          './img/2_character_pepe/1_idle/idle/I-5.png',
+          './img/2_character_pepe/1_idle/idle/I-6.png',
+          './img/2_character_pepe/1_idle/idle/I-7.png',
+          './img/2_character_pepe/1_idle/idle/I-8.png',
+          './img/2_character_pepe/1_idle/idle/I-9.png',
+          './img/2_character_pepe/1_idle/idle/I-10.png',
+];
+
     IMAGES_DEAD_RESURRECTION = [
         './img/2_character_pepe/6_dead_end_fly/DEAD_fly_1.png',
         './img/2_character_pepe/6_dead_end_fly/DEAD_fly_2.png',
@@ -79,11 +92,13 @@ class Character extends MoveableObject {
             this.loadImages(this.IMAGES_JUMPING),
             this.loadImages(this.IMAGES_DEAD),
             this.loadImages(this.IMAGES_HURT),
+            this.loadImages(this.IMAGES_CHILL),
             this.loadImages(this.IMAGES_DEAD_RESURRECTION),
             this.loadImages(this.IMAGES_DEAD_FLY_TO_SKY)
         ]).then(() => {
             this.applyGravity();
             this.animate();
+            this.playAnimation(this.IMAGES_CHILL);
         });
     }
 
@@ -264,15 +279,20 @@ class Character extends MoveableObject {
     /**
      * Handle animation based on state.
      */
-    handleAnimation() {
-        managedSetInterval(() => {
-            if (this.isDead) return;
-            if (this.isHurt()) this.playAnimation(this.IMAGES_HURT);
-            else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
-            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) this.playAnimation(this.IMAGES_WALKING);
-        }, 100);
-    }
-
+  handleAnimation() {
+    managedSetInterval(() => {
+        if (this.isDead) return;
+        if (this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+        } else if (this.isAboveGround()) {
+            this.playAnimation(this.IMAGES_JUMPING);
+        } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.playAnimation(this.IMAGES_WALKING);
+        } else {
+            this.playAnimation(this.IMAGES_CHILL);
+        }
+    }, 100);
+  }
 
     /**
      * Make the character jump.

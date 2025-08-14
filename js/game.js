@@ -234,18 +234,3 @@ function bindMobileButton(buttonId, key) {
     keyboard[key] = false;
   });
 }
-
-/**
- * Quits the game, clears intervals, exits fullscreen, and closes the window.
- */
-function quitGame() {
-  clearAllIntervals();
-  world = null;
-
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-  }
-
-  window.open('', '_self'); 
-  window.close();
-}

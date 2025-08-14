@@ -218,8 +218,8 @@
 
 .btn_fullscreen {
   position: absolute;
-  top: -2px;
-  right: -2px;
+  top: 2px;
+  right: 2px;
   background: rgba(255, 165, 0);
   color: rgb(15, 13, 13);
   border: 2px solid #ff6600;
@@ -263,34 +263,4 @@
   background-color: #e65c00;
   color: white;
   box-shadow: 2px 2px 0 #b34700;
-}
-
-#quit_btn {
-  position: absolute;
-  bottom: 35px;
-  right: 15px;
-
-  font-size: 18px;
-  width: 32px;
-  height: 50px;
-
-  border: 2px;
-  border-color: white;
-  border-radius: 50%;
-
-  background-color: #c0392b;
-  color: rgb(240, 7, 7);
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  box-shadow: 1 1 5px rgba(248, 245, 245, 0.6);
-  transition: background-color 0.3s ease;
-}
-
-#quit_btn:hover {
-  background-color: #e74c3c;
-  color: yellow;
 }
