@@ -171,11 +171,9 @@ class World {
     console.log("Endboss wurde getroffen!");
     this.endbossHitCount++;
     endboss.hurt();
-
     if (this.endbossStatusBar) {
       this.playSound('bossHit');
     }
-
     this.handleEndbossDamage(endboss);
   }
 
@@ -192,7 +190,6 @@ class World {
         this.endbossStatusBar.setPercentage(endboss.energy);
       }
     }
-
     if (endboss.energy <= 0 && !endboss.isDead) {
       endboss.isWalking = false;
       endboss.speed = 0;
@@ -222,7 +219,6 @@ class World {
   canThrowNewBottle() {
     if (this.bottleCounter <= 0) return false;
     if (this.throwableObjects.length === 0) return true;
-
     const lastBottle = this.throwableObjects[this.throwableObjects.length - 1];
     return lastBottle.speedY <= 0;
   }
@@ -244,7 +240,6 @@ class World {
   calculateBottlePercentage() {
     if (this.maxBottles === 0) return 0;
     if (this.bottleCounter === 0) return 0;
-
     const rawPercentage = (this.bottleCounter / this.maxBottles) * 100;
     return this.roundPercentageStep(rawPercentage, 5);
   }
@@ -296,5 +291,4 @@ class World {
     this.mobileControls.style.display =
       (visible && isMobile && isGameRunning) ? 'flex' : 'none';
   }
-
 }

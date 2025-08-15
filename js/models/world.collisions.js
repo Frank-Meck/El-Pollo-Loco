@@ -9,6 +9,7 @@ World.prototype.checkCollisions = function () {
   this.checkBottleHitsEnemies();
 };
 
+
 /**
  * Checks collisions between the character and enemies.
  */
@@ -20,6 +21,7 @@ World.prototype.checkEnemyCollisions = function () {
     }
   });
 };
+
 
 /**
  * Checks if bottles hit chicken enemies and removes them if hit.
@@ -36,6 +38,7 @@ World.prototype.checkBottleHitsEnemies = function () {
     return true;
   });
 };
+
 
 /**
  * Checks if the character stomps on enemies and handles damage.
@@ -54,6 +57,7 @@ World.prototype.checkCharacterStompsEnemy = function () {
   });
 };
 
+
 /**
  * Checks whether an enemy is a valid Chicken type for stomping.
  * @param {Object} enemy 
@@ -63,6 +67,7 @@ World.prototype.isValidChickenEnemy = function (enemy) {
   return enemy instanceof Chicken && !(enemy instanceof SmallChicken);
 };
 
+
 /**
  * Determines whether the character is stomping an enemy.
  * @param {Object} enemy 
@@ -71,17 +76,14 @@ World.prototype.isValidChickenEnemy = function (enemy) {
 World.prototype.isCharacterStompingEnemy = function (enemy) {
   const horizontallyAligned = this.character.x + this.character.width > enemy.x &&
     this.character.x < enemy.x + enemy.width;
-
   const verticallyAbove = this.character.lastY + this.character.height <= enemy.y + 40;
-
   const standsOnTop = this.character.y + this.character.height >= enemy.y &&
     this.character.y + this.character.height <= enemy.y + 40 &&
     horizontallyAligned;
-
   const isFalling = this.character.speedY < 0;
-
   return (verticallyAbove && isFalling && horizontallyAligned) || standsOnTop;
 };
+
 
 /**
  * Handles logic when a chicken enemy is stomped.
@@ -92,6 +94,7 @@ World.prototype.handleEnemyStomp = function (enemy) {
   this.playSound('stomp');
 };
 
+
 /**
  * Handles character getting hit by an enemy.
  */
@@ -99,6 +102,7 @@ World.prototype.handleCharacterHit = function () {
   this.character.hit();
   this.statusBar.setPercentage(this.character.energy);
 };
+
 
 /**
  * Checks collisions with coins.
@@ -115,6 +119,7 @@ World.prototype.checkCoinCollisions = function () {
   });
 };
 
+
 /**
  * Checks collisions with bottles and collects them.
  */
@@ -130,6 +135,7 @@ World.prototype.checkBottleCollisions = function () {
   });
 };
 
+
 /**
  * Main draw loop of the world, including collisions, camera, objects, and status bars.
  */
@@ -138,18 +144,17 @@ World.prototype.draw = function () {
   this.checkEndbossChargeAttack();
   this.checkGameOver();
   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
   this.camera_x = -this.character.x + 100;
   this.drawBackgroundWithCamera();
   this.drawGameObjectsWithCamera();
   this.drawStatusBarElements();
   this.drawCountdown();
   this.handleEndbossMovement();
-
   if (!this.gameOver || (this.showDeadBossTimer && Date.now() - this.showDeadBossTimer < 3000)) {
     this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
 };
+
 
 /**
  * Draws background considering the camera position.
@@ -160,6 +165,7 @@ World.prototype.drawBackgroundWithCamera = function () {
   this.ctx.translate(-this.camera_x, 0);
 };
 
+
 /**
  * Draws game objects considering the camera position.
  */
@@ -169,6 +175,7 @@ World.prototype.drawGameObjectsWithCamera = function () {
   this.ctx.translate(-this.camera_x, 0);
 };
 
+
 /**
  * Handles endboss movement and character interaction.
  */
@@ -177,6 +184,7 @@ World.prototype.handleEndbossMovement = function () {
   this.checkAndStartMovingToEndboss(endboss);
   this.moveCharacterTowardsEndboss(endboss);
 };
+
 
 /**
  * Starts character movement towards the endboss if dead animation finished.
@@ -191,44 +199,42 @@ World.prototype.checkAndStartMovingToEndboss = function (endboss) {
   }
 };
 
+
 /**
  * Moves character towards the endboss after boss death.
  * @param {Object} endboss 
  */
 World.prototype.moveCharacterTowardsEndboss = function (endboss) {
   if (!this.movingToEndboss || !endboss) return;
-
   const targetX = endboss.x - 80;
   const speed = 3;
-
   if (this.character.x < targetX) {
     this.character.x += speed;
   } else {
     this.character.x = targetX;
     this.movingToEndboss = false;
-
     setTimeout(() => {
       this.endGame(true);
     }, 500);
   }
 };
 
+
 /**
  * Checks game over conditions and triggers end game sequence.
  */
 World.prototype.checkGameOver = function () {
   const endboss = this.getEndboss();
-
   if (this.shouldStartDeadSequence()) {
     this.character.startDeadSequence(() => this.endGame(false));
   } else if (this.shouldEndGameFalse(endboss)) {
     this.endGame(false);
   }
-
   if (this.shouldEndGameTrue(endboss)) {
     this.endGame(true);
   }
 };
+
 
 /**
  * Determines if character dead sequence should start.
@@ -238,6 +244,7 @@ World.prototype.shouldStartDeadSequence = function () {
   return this.character.energy <= 0 && !this.character.deadAnimationDone && !this.gameOver;
 };
 
+
 /**
  * Determines if the game should end with failure.
  * @param {Object} endboss 
@@ -245,11 +252,9 @@ World.prototype.shouldStartDeadSequence = function () {
  */
 World.prototype.shouldEndGameFalse = function (endboss) {
   if (!endboss) return false;
-
   const bottleBarExists = this.bottleStatusBar && typeof this.bottleStatusBar.percentage === 'number';
   const allBottlesUsed = bottleBarExists && this.bottleStatusBar.percentage === 0 && this.bottleCounter === 0;
   const bottleWasFull = bottleBarExists && this.bottleStatusBar.percentage === 100;
-
   return (this.countdown.remainingTime <= 0 && endboss.energy > 0) ||
     (bottleWasFull && allBottlesUsed && endboss.energy > 0);
 };
@@ -271,12 +276,10 @@ World.prototype.shouldEndGameTrue = function (endboss) {
  */
 World.prototype.endGame = function (won) {
   if (this.gameOver) return;
-
   this.setGameOverStatus(won);
   this.stopAllSounds();
   this.hideGameControls();
   this.setMobileControlsVisibility(false);
-
   setTimeout(() => this.stopAllAnimationsAndIntervals(), 2000);
   this.showEndScreenAfterDelay(won);
 };
@@ -306,7 +309,7 @@ World.prototype.stopAllAnimationsAndIntervals = function () {
  * Stops all game sounds.
  */
 World.prototype.stopAllSounds = function () {
-  const sounds = ['background','chickenNoise','bossHit','win','stomp','coin','collectBottle'];
+  const sounds = ['background', 'chickenNoise', 'bossHit', 'win', 'stomp', 'coin', 'collectBottle'];
   sounds.forEach(sound => soundManager.stop(sound));
 };
 
@@ -342,51 +345,47 @@ World.prototype.showEndScreenAfterDelay = function (won) {
 };
 
 
-
-// === in world.collision.js ===
-
-// Timeout-Handle als Property von World
 World.prototype.restartButtonTimeout = null;
 
+
 /**
- * Zeigt den Restart-Button an und bindet das onclick Event.
+ * Displays the restart button and assigns its click event to restart the game.
+ * The button is first made visible, then activated with an onclick handler.
  */
 World.prototype.showRestartButton = function () {
-    const restartBtn = document.getElementById('restart_btn');
-    if (restartBtn) {
-        restartBtn.style.display = 'inline-block';   // erst sichtbar
-        restartBtn.onclick = () => restartGame();     // dann aktiv
-    }
+  const restartBtn = document.getElementById('restart_btn');
+  if (restartBtn) {
+    restartBtn.style.display = 'inline-block';   // make visible
+    restartBtn.onclick = () => restartGame();    // then activate
+  }
 };
+
 
 /**
- * Zeigt das Endbild an (You Win / You Lose) und startet verzögert die Anzeige des Restart-Buttons.
- * @param {boolean} won - True, wenn Spieler gewonnen hat
+ * Displays the end-of-game image depending on whether the player won or lost.
+ * Clears the canvas, draws the appropriate image, hides the restart button,
+ * and shows it again after a short delay (1 second) using a timeout.
+ * 
+ * @param {boolean} won - True if the player won, false if lost.
  */
 World.prototype.displayEndImage = function (won) {
-    const image = new Image();
-    image.src = won
-        ? './img/You won, you lost/You Win A.png'
-        : './img/You won, you lost/You lost.png';
-
-    image.onload = () => {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
-
-        // Restart-Button vorher unsichtbar & Event deaktivieren
-        const restartBtn = document.getElementById('restart_btn');
-        restartBtn.style.display = 'none';
-        restartBtn.onclick = null;
-
-        // alten Timeout abbrechen
-        if (this.restartButtonTimeout) clearTimeout(this.restartButtonTimeout);
-
-        // Restart-Button erst nach 2 Sekunden anzeigen
-        this.restartButtonTimeout = setTimeout(() => {
-            this.showRestartButton();
-        }, 1000);
-    };
+  const image = new Image();
+  image.src = won
+    ? './img/You won, you lost/You Win A.png'
+    : './img/You won, you lost/You lost.png';
+  image.onload = () => {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+    const restartBtn = document.getElementById('restart_btn');
+    restartBtn.style.display = 'none';
+    restartBtn.onclick = null;
+    if (this.restartButtonTimeout) clearTimeout(this.restartButtonTimeout);
+    this.restartButtonTimeout = setTimeout(() => {
+      this.showRestartButton();
+    }, 1000);
+  };
 };
+
 
 /**
  * Draws background objects.
@@ -403,7 +402,6 @@ World.prototype.drawStatusBarElements = function () {
   if (this.statusBar) this.addToMap(this.statusBar);
   if (this.coinStatusBar) this.addToMap(this.coinStatusBar);
   if (this.bottleStatusBar) this.addToMap(this.bottleStatusBar);
-
   this.updateEndbossAppearance();
   this.drawEndbossStatusBarIfNeeded();
 };

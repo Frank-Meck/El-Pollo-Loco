@@ -32,7 +32,6 @@ function createBackgroundObjects() {
     backgroundObjects.push(new BackgroundObject(getLayerPath(i, 2), x));
     backgroundObjects.push(new BackgroundObject(getLayerPath(i, 1), x));
   }
-
   return backgroundObjects;
 }
 
@@ -44,15 +43,12 @@ function createBackgroundObjects() {
 function createClouds() {
   const positions = [-720, 0, 720, 1440, 2160, 2880, 3600, 4320];
   const clouds = [];
-
   for (let i = 0; i < positions.length; i++) {
     const cloudImage = i % 2 === 0
       ? './img/5_background/layers/4_clouds/1.png'
       : './img/5_background/layers/4_clouds/2.png';
-
     clouds.push(new Cloud(cloudImage, positions[i]));
   }
-
   return clouds;
 }
 

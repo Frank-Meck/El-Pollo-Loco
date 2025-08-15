@@ -16,6 +16,7 @@ class StatusBar extends DrawableObject {
     this.height = 40;
   }
 
+
   /**
    * Loads images and sets initial percentage.
    * @param {string[]} images - Array of image paths.
@@ -27,6 +28,7 @@ class StatusBar extends DrawableObject {
     this.setPercentage(percentage);
   }
 
+
   /**
    * Sets the percentage and updates the image.
    * @param {number} percentage - New percentage value.
@@ -37,6 +39,7 @@ class StatusBar extends DrawableObject {
     let path = this.IMAGES[index];
     this.setImageFromCacheOrWarn(path);
   }
+
 
   /**
    * Sets image from cache or warns if missing.
@@ -51,6 +54,7 @@ class StatusBar extends DrawableObject {
     }
   }
 
+  
   /**
    * Determines image index based on percentage.
    * @returns {number} Image index.

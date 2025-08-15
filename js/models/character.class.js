@@ -72,6 +72,7 @@ class Character extends MoveableObject {
         './img/2_character_pepe/6_dead_end_fly/fly_4.png'
     ];
 
+
     world;
     offset = { top: 140, left: 30, right: 20, bottom: 15 };
     energy = 100;
@@ -153,7 +154,6 @@ class Character extends MoveableObject {
                 this.img = this.imageCache[this.IMAGES_DEAD_FLY_TO_SKY[this.deadAnimationIndex]];
                 this.deadAnimationIndex++;
             }
-
             this.y -= 35;
 
             if (this.y + this.height <= 0) {
@@ -171,7 +171,6 @@ class Character extends MoveableObject {
     takeDamage(amount) {
         if (this.isDead) return;
         this.energy -= amount;
-
         if (this.energy <= 0) {
             this.startDeadSequence();
         } else {
@@ -188,9 +187,7 @@ class Character extends MoveableObject {
         this.isDead = true;
         this.speed = 0;
         this.isHurtFlag = false;
-
         if (this.gravityInterval) clearInterval(this.gravityInterval);
-
         this.playDeadAnimation();
     }
 
@@ -294,6 +291,7 @@ class Character extends MoveableObject {
     }, 100);
   }
 
+  
     /**
      * Make the character jump.
      */

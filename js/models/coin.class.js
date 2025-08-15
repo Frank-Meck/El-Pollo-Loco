@@ -30,17 +30,14 @@ class Coin extends MoveableObject {
     static generateCoins(count = Coin.numberOfCoins, xRange = [400, 4100], yRange = [120, 380]) {
         const coins = [];
         const usedX = [];
-
         while (coins.length < count) {
             let x = Math.floor(Math.random() * (xRange[1] - xRange[0])) + xRange[0];
             let y = Math.floor(Math.random() * (yRange[1] - yRange[0])) + yRange[0];
-
             if (usedX.every(existingX => Math.abs(existingX - x) >= 100)) {
                 coins.push(new Coin(x, y));
                 usedX.push(x);
             }
         }
-
         return coins;
     }
 }

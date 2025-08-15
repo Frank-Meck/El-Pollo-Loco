@@ -11,6 +11,7 @@ class SmallChicken extends MoveableObject {
 
     offset = { top: 5, left: 15, right: 15, bottom: 5 };
 
+
     /**
      * Creates a small chicken at the given X position.
      * @param {number} x - The starting X position.
@@ -20,9 +21,10 @@ class SmallChicken extends MoveableObject {
         this.x = x;
         this.loadImage(this.IMAGES_WALKING[0]);
         this.loadImages(this.IMAGES_WALKING);
-        this.speed = 0.5 + Math.random(); // Random speed between 0.5 and 1.5
+        this.speed = 0.5 + Math.random();
         this.animate();
     }
+
 
     /**
      * Animates the chicken by moving it left and playing the walking animation loop.
@@ -35,15 +37,15 @@ class SmallChicken extends MoveableObject {
     }
 }
 
+
 /**
  * Static method to spawn SmallChickens at fixed intervals.
  * @param {World} world - The world object to add the chickens to.
  * @param {number} startX - The starting X position for spawning.
  */
-SmallChicken.spawnAtFixedOffset = function(world, startX) {
+SmallChicken.spawnAtFixedOffset = function (world, startX) {
     let step = 720;
     let currentX = startX;
-
     while (currentX < 3900) {
         const amount = SmallChicken.calculateChickenAmount();
         SmallChicken.spawnChickensAtCurrentX(world, currentX, amount);
@@ -51,13 +53,15 @@ SmallChicken.spawnAtFixedOffset = function(world, startX) {
     }
 }
 
+
 /**
  * Calculates a random number of chickens between 1 and 3.
  * @returns {number} Number of chickens to spawn.
  */
-SmallChicken.calculateChickenAmount = function() {
+SmallChicken.calculateChickenAmount = function () {
     return Math.floor(Math.random() * 3) + 1;  // 1 to 3 chickens
 }
+
 
 /**
  * Spawns a given number of SmallChickens at the current X position.
@@ -65,7 +69,7 @@ SmallChicken.calculateChickenAmount = function() {
  * @param {number} currentX - The current X position.
  * @param {number} amount - The number of chickens to spawn.
  */
-SmallChicken.spawnChickensAtCurrentX = function(world, currentX, amount) {
+SmallChicken.spawnChickensAtCurrentX = function (world, currentX, amount) {
     for (let i = 0; i < amount; i++) {
         const x = currentX + i * 30; // 30px spacing between chickens
         const chicken = new SmallChicken(x);

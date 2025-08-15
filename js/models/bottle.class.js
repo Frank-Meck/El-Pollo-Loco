@@ -5,6 +5,7 @@ class Bottle extends MoveableObject {
 
     static numberOfBottles = 25;
 
+    
     /**
      * Constructor initializes bottle position and image.
      * @param {number} x - X coordinate of the bottle.

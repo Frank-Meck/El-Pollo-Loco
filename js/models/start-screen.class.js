@@ -53,7 +53,6 @@ class StartScreen {
   showHTMLScreen(type) {
     document.querySelectorAll('.info_screen, .canvas_container, #start_screen')
       .forEach(el => el.style.display = 'none');
-
     if (type === 'start') {
       document.getElementById('start_screen').style.display = 'block';
       if (this.onStartCallback) this.onStartCallback();

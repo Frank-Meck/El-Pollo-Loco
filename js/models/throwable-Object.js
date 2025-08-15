@@ -1,5 +1,6 @@
 class ThrowableObject extends MoveableObject {
 
+
   /**
    * Creates a throwable object at the given position.
    * @param {number} x - Initial x position.
@@ -30,7 +31,7 @@ class ThrowableObject extends MoveableObject {
    */
   startThrowInterval() {
     managedSetInterval(() => {
-      this.x += 10;  // Moves right every 25 ms
+      this.x += 10;  
     }, 25);
   }
 }

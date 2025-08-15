@@ -1,5 +1,6 @@
 const STORAGE = window.localStorage;
 
+
 /**
  * Sound manager for handling audio playback, mute, and volume.
  */
@@ -7,6 +8,7 @@ const soundManager = {
     isMuted: false,
     volume: 0.3,
     sounds: {},
+
 
     /**
      * Add a new sound to the manager.
@@ -58,7 +60,6 @@ const soundManager = {
         this.isMuted = !this.isMuted;
         Object.values(this.sounds).forEach(audio => audio.muted = this.isMuted);
         STORAGE.setItem('gameMuted', this.isMuted ? 'true' : 'false');
-
         document.querySelectorAll('#mute-btn-start, #mute_btn_game')
             .forEach(btn => btn.textContent = this.isMuted ? '🔇' : '🔊');
     },
@@ -72,7 +73,6 @@ const soundManager = {
         this.volume = parseFloat(value);
         Object.values(this.sounds).forEach(audio => audio.volume = this.volume);
         STORAGE.setItem('gameVolume', String(this.volume));
-
         document.querySelectorAll('#volume-slider-start, #volume_slider_game')
             .forEach(slider => slider.value = this.volume);
     }
@@ -85,7 +85,6 @@ const soundManager = {
 function loadSavedAudioSettings() {
     const savedMuteState = STORAGE.getItem('gameMuted');
     soundManager.isMuted = savedMuteState === 'true';
-
     const savedVolume = STORAGE.getItem('gameVolume');
     soundManager.volume = savedVolume !== null ? parseFloat(savedVolume) : 0.3;
 }
@@ -97,7 +96,6 @@ function loadSavedAudioSettings() {
 function initializeSounds() {
     const background = soundManager.add("background", "./audio/background_music_1.mp3", true);
     background.volume = soundManager.volume * 0.7; 
-
     const standardVolume = soundManager.volume;
     soundManager.add("chickenNoise", "./audio/chicken_noises_1.mp3", true).volume = standardVolume;
     soundManager.add("coin", "./audio/get_coin_1.mp3").volume = standardVolume;
@@ -134,6 +132,7 @@ soundManager.setVolume = function(value) {
         .forEach(slider => slider.value = this.volume);
 };
 
+
 /**
  * Apply current volume and mute settings to all sounds.
  */
@@ -155,8 +154,6 @@ function syncAudioUI() {
     document.querySelectorAll('#volume-slider-start, #volume_slider_game')
         .forEach(slider => slider.value = soundManager.volume);
 }
-
-
 document.addEventListener('DOMContentLoaded', () => {
     loadSavedAudioSettings();
     initializeSounds();

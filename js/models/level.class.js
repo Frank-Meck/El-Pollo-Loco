@@ -10,6 +10,7 @@ class Level {
     bottles; 
     level_end_x = 4200;
 
+    
     /**
      * Creates a new level instance.
      * @param {Array} enemies - Array of enemy objects in the level.

@@ -90,7 +90,6 @@ class Endboss extends MoveableObject {
             }
             this.currentImage = 0;
         }
-
         this.img = this.imageCache[imagesArray[this.currentImage]];
         this.currentImage++;
     }
@@ -118,7 +117,6 @@ class Endboss extends MoveableObject {
     handleDeadAnimationEnd(imagesArray) {
         this.currentImage = imagesArray.length - 1;
         this.img = this.imageCache[imagesArray[this.currentImage]];
-
         if (!this.deadAnimationFinished) {
             this.deadAnimationFinished = true;
             this.onDeathAnimationFinished();
@@ -153,10 +151,8 @@ class Endboss extends MoveableObject {
         this.currentAnimation = 'DEAD';
         this.currentImage = 0;
         this.speed = 0;
-
         if (this.chargeInterval) clearInterval(this.chargeInterval);
         if (this.reverseInterval) clearInterval(this.reverseInterval);
-
         this.isCharging = false;
         this.deadAnimationFinished = false;
     }
@@ -169,7 +165,6 @@ class Endboss extends MoveableObject {
     startCharge(targetX) {
         if (this.isCharging || this.isDead) return;
         this.isCharging = true;
-
         const delay = Math.random() * 3000;
         setTimeout(() => {
             this.chargeAttack(targetX);
@@ -185,13 +180,11 @@ class Endboss extends MoveableObject {
         if (this.isDead) return;
         this.currentAnimation = 'ATTACK';
         this.currentImage = 0;
-
         const chargeSpeed = 6;
         const retreatSpeed = 8;
         const originalX = this.x;
         const destinationX = 3900;
         const direction = (this.x > destinationX) ? -1 : 1;
-
         this.moveForwardDuringCharge(chargeSpeed, direction, destinationX, originalX, retreatSpeed);
     }
 
@@ -202,7 +195,6 @@ class Endboss extends MoveableObject {
     moveForwardDuringCharge(chargeSpeed, direction, destinationX, originalX, retreatSpeed) {
         const forward = managedSetInterval(() => {
             this.x += chargeSpeed * direction;
-
             if ((direction === -1 && this.x <= destinationX) ||
                 (direction === 1 && this.x >= destinationX)) {
                 clearInterval(forward);
@@ -229,12 +221,10 @@ class Endboss extends MoveableObject {
         const backward = managedSetInterval(() => {
             const dir = (this.x < destinationX) ? +1 : -1;
             this.x += speed * dir;
-
             this.currentImage--;
             if (this.currentImage < 0) {
                 this.currentImage = this.IMAGES_ATTACK.length - 1;
             }
-
             if ((dir > 0 && this.x >= destinationX) ||
                 (dir < 0 && this.x <= destinationX)) {
                 clearInterval(backward);

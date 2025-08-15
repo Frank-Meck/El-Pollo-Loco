@@ -32,7 +32,6 @@ class DrawableObject {
                 this.imageCache[path] = img;
             });
         });
-
         return Promise.all(promises);
     }
 

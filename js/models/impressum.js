@@ -34,10 +34,8 @@ function closeImpressum() {
     document.getElementById('info_screen').style.display = 'none';
     document.getElementById('start_screen').style.display = 'flex';
     document.getElementById('restart_btn').style.display = 'none';
-
     const muteBtn = document.getElementById('mute-btn');
     const volumeBtn = document.getElementById('volume-btn');
-
     if (muteBtn) muteBtn.style.display = 'none';
     if (volumeBtn) volumeBtn.style.display = 'none';
 }
