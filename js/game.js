@@ -1,6 +1,6 @@
 let canvas;
 let world;
-let keyboard = new Keyboard();
+let keyboard = new Keyboard(); 
 let isFullscreenActive = false;
 
 const activeIntervals = [];
@@ -63,23 +63,23 @@ function addStatusBarsToWorld(statusBars) {
  * Starts the game, toggles UI elements, and initializes the game.
  */
 function startGame() {
-    document.getElementById('start_screen').style.display = 'none';
-    document.querySelector('.canvas_container').style.display = 'block';
-    document.getElementById('restart_btn').style.display = 'none';
-    clearAllIntervals();
+  document.getElementById('start_screen').style.display = 'none';
+  document.querySelector('.canvas_container').style.display = 'block';
+  document.getElementById('restart_btn').style.display = 'none';
+  clearAllIntervals();
 
-    if (window.innerWidth <= 1024) {
-        const container = document.getElementById('game_container');
-        if (container.requestFullscreen) {
-            container.requestFullscreen();
-        }
+  if (window.innerWidth <= 1024) {
+    const container = document.getElementById('game_container');
+    if (container.requestFullscreen) {
+      container.requestFullscreen();
     }
+  }
 
-    init().then(() => {
-        if (world) {
-            world.setMobileControlsVisibility(true);
-        }
-    });
+  init().then(() => {
+    if (world) {
+      world.setMobileControlsVisibility(true);
+    }
+  });
 }
 
 /**
@@ -127,13 +127,92 @@ function closeImpressum() {
 }
 
 /**
+ * Verzögert das Anzeigen des Restart-Buttons nach Game Over / You Win
+ */
+function showRestartButtonWithDelay() {
+  const restartBtn = document.getElementById('restart_btn');
+  restartBtn.style.display = 'none';
+  restartBtn.disabled = true;
+
+  setTimeout(() => {
+    restartBtn.style.display = 'block';
+    restartBtn.disabled = false;
+  }, 2000); // 2 Sekunden Verzögerung
+}
+
+/**
  * Restarts the game and ensures fullscreen if needed.
  */
 async function restartGame() {
-  clearAllIntervals();
-  await init();
-  toggleFullscreen();
-  document.getElementById('restart_btn').style.display = 'none';
+    console.log('RestartGame aufgerufen. Fullscreenstatus:', isFullscreenActive);
+
+    // Alte Restart-Timeouts abbrechen
+    if (world?.restartButtonTimeout) {
+        clearTimeout(world.restartButtonTimeout);
+        world.restartButtonTimeout = null;
+    }
+
+    // UI wieder anzeigen
+    document.querySelector('.canvas_container').style.display = 'block';
+    document.getElementById('mute_btn_game').style.display = 'inline-block';
+    document.getElementById('volume_slider_game').style.display = 'inline-block';
+    document.getElementById('restart_btn').style.display = 'none';
+
+    // Alte Welt stoppen
+    if (world) {
+        world.stopAllAnimationsAndIntervals?.();
+        world = null;
+    }
+
+    // Alle Intervalle löschen
+    clearAllIntervals();
+
+    // Keyboard-Events vom alten Spiel entfernen
+    removeAllKeyboardListeners();
+
+    // Canvas leeren
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Neue Welt starten
+    await init();
+
+    // Keyboard-Events neu setzen
+    if (world && world.character) {
+        setupKeyboardEvents(keyboard, world.character);
+    }
+
+    // Mobile Controls sichtbar machen
+    world?.setMobileControlsVisibility(true);
+
+    // Fullscreen ggf. reaktivieren
+    if (isFullscreenActive && !document.fullscreenElement) {
+        setTimeout(async () => {
+            try {
+                await document.getElementById('game_container').requestFullscreen();
+                console.log('Fullscreen nach Restart wieder aktiviert');
+            } catch (err) {
+                console.warn('Fullscreen konnte nicht wieder aktiviert werden:', err);
+            }
+        }, 100);
+    }
+}
+
+function removeAllKeyboardListeners() {
+    window.onkeydown = null;
+    window.onkeyup = null;
+}
+
+function setupKeyboardEvents(keyboard, character) {
+    window.onkeydown = (e) => {
+        keyboard.keys[e.code] = true;
+        character.handleKeyDown?.(e); // optional, falls handleKeyDown existiert
+    };
+
+    window.onkeyup = (e) => {
+        keyboard.keys[e.code] = false;
+        character.handleKeyUp?.(e); // optional
+    };
 }
 
 /**

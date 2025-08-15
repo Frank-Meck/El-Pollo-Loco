@@ -72,10 +72,10 @@ World.prototype.isCharacterStompingEnemy = function (enemy) {
   const horizontallyAligned = this.character.x + this.character.width > enemy.x &&
     this.character.x < enemy.x + enemy.width;
 
-  const verticallyAbove = this.character.lastY + this.character.height <= enemy.y + 20;
+  const verticallyAbove = this.character.lastY + this.character.height <= enemy.y + 40;
 
   const standsOnTop = this.character.y + this.character.height >= enemy.y &&
-    this.character.y + this.character.height <= enemy.y + 20 &&
+    this.character.y + this.character.height <= enemy.y + 40 &&
     horizontallyAligned;
 
   const isFalling = this.character.speedY < 0;
@@ -321,6 +321,15 @@ World.prototype.hideGameControls = function () {
 
 
 /**
+ * Visibel game controls.
+ */
+World.prototype.showGameControls = function () {
+  document.getElementById('mute_btn_game').style.display = 'inline-block';
+  document.getElementById('volume_slider_game').style.display = 'inline-block';
+};
+
+
+/**
  * Shows the end screen after a delay.
  * @param {boolean} won - True if player won.
  */
@@ -333,31 +342,51 @@ World.prototype.showEndScreenAfterDelay = function (won) {
 };
 
 
+
+// === in world.collision.js ===
+
+// Timeout-Handle als Property von World
+World.prototype.restartButtonTimeout = null;
+
 /**
- * Displays the restart button.
+ * Zeigt den Restart-Button an und bindet das onclick Event.
  */
 World.prototype.showRestartButton = function () {
-  const restartBtn = document.getElementById('restart_btn');
-  restartBtn.style.display = 'block';
-  restartBtn.onclick = () => location.reload();
+    const restartBtn = document.getElementById('restart_btn');
+    if (restartBtn) {
+        restartBtn.style.display = 'inline-block';   // erst sichtbar
+        restartBtn.onclick = () => restartGame();     // dann aktiv
+    }
 };
-
 
 /**
- * Displays the end image based on game outcome.
- * @param {boolean} won - True if player won.
+ * Zeigt das Endbild an (You Win / You Lose) und startet verzögert die Anzeige des Restart-Buttons.
+ * @param {boolean} won - True, wenn Spieler gewonnen hat
  */
 World.prototype.displayEndImage = function (won) {
-  const image = new Image();
-  image.src = won
-    ? './img/You won, you lost/You Win A.png'
-    : './img/You won, you lost/You lost.png';
-  image.onload = () => {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
-  };
-};
+    const image = new Image();
+    image.src = won
+        ? './img/You won, you lost/You Win A.png'
+        : './img/You won, you lost/You lost.png';
 
+    image.onload = () => {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+
+        // Restart-Button vorher unsichtbar & Event deaktivieren
+        const restartBtn = document.getElementById('restart_btn');
+        restartBtn.style.display = 'none';
+        restartBtn.onclick = null;
+
+        // alten Timeout abbrechen
+        if (this.restartButtonTimeout) clearTimeout(this.restartButtonTimeout);
+
+        // Restart-Button erst nach 2 Sekunden anzeigen
+        this.restartButtonTimeout = setTimeout(() => {
+            this.showRestartButton();
+        }, 1000);
+    };
+};
 
 /**
  * Draws background objects.

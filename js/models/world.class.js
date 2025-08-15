@@ -1,7 +1,6 @@
 class World {
 
   character = new Character();
-  level = level1;
   canvas;
   ctx;
   keyboard;
@@ -30,6 +29,7 @@ class World {
    * @param {Object} keyboard - The keyboard input handler.
    */
   constructor(canvas, keyboard) {
+    this.level = createLevel1();
     this.initializeCanvasAndKeyboard(canvas, keyboard);
     this.initializeLevelData();
     this.spawnChickens();

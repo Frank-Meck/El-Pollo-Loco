@@ -60,12 +60,14 @@ function createClouds() {
 /**
  * Creates the first level instance with predefined enemies, clouds, backgrounds, coins and bottles.
  */
-const level1 = new Level(
-  [
-    new Endboss()
-  ],
-  createClouds(),
-  createBackgroundObjects(),
-  Coin.generateCoins(),
-  Bottle.generateBottles()
-);
+function createLevel1() {
+  return new Level(
+    [
+      new Endboss()
+    ],
+    createClouds(),
+    createBackgroundObjects(),
+    Coin.generateCoins(),
+    Bottle.generateBottles()
+  );
+}

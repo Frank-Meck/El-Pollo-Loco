@@ -95,15 +95,44 @@ function loadSavedAudioSettings() {
  * Initialize all game sounds.
  */
 function initializeSounds() {
-    soundManager.add("background", "./audio/background_music_1.mp3", true);
-    soundManager.add("chickenNoise", "./audio/chicken_noises_1.mp3", true);
-    soundManager.add("coin", "./audio/get_coin_1.mp3");
-    soundManager.add("stomp", "./audio/chicken_platt.mp3");
-    soundManager.add("bossHit", "./audio/Falsche_klirren_1.mp3");
-    soundManager.add("collectBottle", "./audio/collect_bottle.mp3");
-    soundManager.add("win", "./audio/win_music_1.mp3");
+    const background = soundManager.add("background", "./audio/background_music_1.mp3", true);
+    background.volume = soundManager.volume * 0.7; 
+
+    const standardVolume = soundManager.volume;
+    soundManager.add("chickenNoise", "./audio/chicken_noises_1.mp3", true).volume = standardVolume;
+    soundManager.add("coin", "./audio/get_coin_1.mp3").volume = standardVolume;
+    soundManager.add("stomp", "./audio/chicken_platt.mp3").volume = standardVolume;
+    soundManager.add("bossHit", "./audio/Falsche_klirren_1.mp3").volume = standardVolume;
+    soundManager.add("collectBottle", "./audio/collect_bottle.mp3").volume = standardVolume;
+    soundManager.add("win", "./audio/win_music_1.mp3").volume = standardVolume;
 }
 
+
+/**
+ * Sets the master volume for all sounds managed by the soundManager.
+ * 
+ * This method updates the volume of each sound. If a sound is named "background",
+ * its volume is reduced to 70% of the master volume. The new volume is stored
+ * in persistent storage under the key 'gameVolume' and updates any 
+ * volume sliders in the DOM with IDs 'volume-slider-start' and 'volume_slider_game'.
+ * 
+ * @param {number|string} value - The desired volume level (0.0 to 1.0). Strings
+ *                                will be converted to a float.
+ */
+soundManager.setVolume = function(value) {
+    this.volume = parseFloat(value);
+    Object.entries(this.sounds).forEach(([name, audio]) => {
+        if (name === "background") {
+            audio.volume = this.volume * 0.7; 
+        } else {
+            audio.volume = this.volume; 
+        }
+    });
+    STORAGE.setItem('gameVolume', String(this.volume));
+
+    document.querySelectorAll('#volume-slider-start, #volume_slider_game')
+        .forEach(slider => slider.value = this.volume);
+};
 
 /**
  * Apply current volume and mute settings to all sounds.
