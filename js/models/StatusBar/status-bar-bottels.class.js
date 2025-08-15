@@ -23,7 +23,7 @@ class StatusBarBottles extends StatusBar {
      * Load images and initialize the status bar percentage.
      * @param {number} percentage - Initial percentage of the status bar.
      */
-    async loadAndInit(percentage = 100) {
+    async loadAndInit(percentage = 0) {
         await this.loadImages(this.IMAGES);
         this.setPercentage(percentage);
     }
