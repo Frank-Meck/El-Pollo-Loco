@@ -1,22 +1,4 @@
 /**
- * Checks device orientation and shows/hides rotate message on mobile.
- */
-function checkOrientation() {
-  const rotateMessage = document.getElementById('rotate_message');
-  const gameContainer = document.getElementById('game_container');
-  const isPortrait = window.innerHeight > window.innerWidth;
-  const isMobile = window.innerWidth <= 1024;
-  if (isMobile && isPortrait) {
-    rotateMessage.style.display = 'flex';
-    gameContainer.style.display = 'none';
-  } else {
-    rotateMessage.style.display = 'none';
-    gameContainer.style.display = 'block';
-  }
-}
-
-
-/**
  * Resizes the canvas while maintaining 720x480 ratio.
  */
 function resizeCanvas() {
@@ -88,6 +70,7 @@ function fitGameToViewport() {
   const container = document.getElementById('game_container');
   const canvas = document.getElementById('canvas');
   if (!container || !canvas) return;
+
   const baseW = 720;
   const baseH = 480;
   const viewportH = window.innerHeight;
@@ -96,26 +79,23 @@ function fitGameToViewport() {
   if (viewportW > 1024) {
     container.style.width = baseW + 'px';
     container.style.height = baseH + 'px';
-    canvas.style.width = '720px';
-    canvas.style.height = '480px';
+    canvas.style.width = baseW + 'px';
+    canvas.style.height = baseH + 'px';
   } else {
-    const scale = Math.min(viewportW / baseW, viewportH / baseH);
-    container.style.width = Math.floor(baseW * scale) + 'px';
-    container.style.height = Math.floor(baseH * scale) + 'px';
+    container.style.width = viewportW + 'px';
+    container.style.height = viewportH + 'px';
     canvas.style.width = '100%';
     canvas.style.height = '100%';
   }
 }
 
 
-/** Events bündeln */
 function handleResizeAndOrientation() {
   checkOrientation();
   fitGameToViewport();
 }
 
 
-/** Init */
 window.addEventListener('load', handleResizeAndOrientation);
 window.addEventListener('resize', handleResizeAndOrientation);
 window.addEventListener('orientationchange', handleResizeAndOrientation);

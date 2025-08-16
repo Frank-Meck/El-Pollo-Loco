@@ -47,7 +47,7 @@
 
 #restart_btn {
   position: absolute;
-  top: 220px;
+  top: 200px;
   left: 380px;
   display: none;
   transform: translate(-50%, -50%);
