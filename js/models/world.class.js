@@ -168,8 +168,7 @@ class World {
    * @param {Endboss} endboss 
    */
   handleEndbossHit(endboss) {
-    console.log("Endboss wurde getroffen!");
-    this.endbossHitCount++;
+     this.endbossHitCount++;
     endboss.hurt();
     if (this.endbossStatusBar) {
       this.playSound('bossHit');
