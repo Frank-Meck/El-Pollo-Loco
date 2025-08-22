@@ -96,11 +96,18 @@ World.prototype.handleEnemyStomp = function (enemy) {
 
 
 /**
- * Handles character getting hit by an enemy.
+ * Handles character getting hit by an enemy with cooldown.
  */
 World.prototype.handleCharacterHit = function () {
-  this.character.hit();
-  this.statusBar.setPercentage(this.character.energy);
+  if (!this.lastHitTime) this.lastHitTime = 0;
+  if (!this.hitCooldown) this.hitCooldown = 100; // 1 second cooldown
+
+  const now = Date.now();
+  if (now - this.lastHitTime >= this.hitCooldown) {
+    this.character.hit();
+    this.statusBar.setPercentage(this.character.energy);
+    this.lastHitTime = now; // remember last hit time
+  }
 };
 
 
@@ -324,7 +331,7 @@ World.prototype.hideGameControls = function () {
 
 
 /**
- * Visibel game controls.
+ * Visible game controls.
  */
 World.prototype.showGameControls = function () {
   document.getElementById('mute_btn_game').style.display = 'inline-block';
