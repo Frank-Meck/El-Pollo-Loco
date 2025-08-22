@@ -1,38 +1,33 @@
 /**
- * Resizes the canvas while maintaining 720x480 ratio.
+ * Resizes #game_container and #canvas while maintaining 720x480 ratio.
  */
-function resizeCanvas() {
+function resizeGame() {
+  const container = document.getElementById('game_container');
   const canvas = document.getElementById('canvas');
-  const ratio = 720 / 480;
-  if (window.innerWidth <= 1024) {
-    canvas.style.width = '100vw';
-    canvas.style.height = `${window.innerWidth / ratio}px`;
-  } else {
-    canvas.style.width = '720px';
-    canvas.style.height = '480px';
+  if (!container || !canvas) return;
+  const baseW = 720;
+  const baseH = 480;
+  const ratio = baseW / baseH;
+  const viewportW = window.innerWidth;
+  const viewportH = window.innerHeight;
+  if (viewportW > 1024) {
+    container.style.width = baseW + 'px';
+    container.style.height = baseH + 'px';
+    canvas.style.width = baseW + 'px';
+    canvas.style.height = baseH + 'px';
+    return;
   }
+  let newW = viewportW;
+  let newH = newW / ratio;
+  if (newH > viewportH) {
+    newH = viewportH;
+    newW = newH * ratio;
+  }
+  container.style.width = newW + 'px';
+  container.style.height = newH + 'px';
+  canvas.style.width = newW + 'px';
+  canvas.style.height = newH + 'px';
 }
-
-
-/**
- * Registers load, resize, and orientation events.
- */
-function registerEvents() {
-  window.addEventListener('load', () => {
-    checkOrientation();
-    resizeCanvas();
-  });
-  window.addEventListener('resize', () => {
-    checkOrientation();
-    resizeCanvas();
-  });
-  window.addEventListener('orientationchange', () => {
-    checkOrientation();
-    resizeCanvas();
-  });
-}
-
-registerEvents();
 
 
 /**
@@ -53,6 +48,7 @@ function checkOrientation() {
   const viewportW = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
   const isPortrait = viewportH > viewportW;
   const mobile = isMobileViewport();
+
   if (mobile && isPortrait) {
     rotateMessage.style.display = 'flex';
     gameContainer.style.display = 'none';
@@ -64,38 +60,15 @@ function checkOrientation() {
 
 
 /**
- * Scales #game_container and #canvas to fit viewport, maintaining 720x480 ratio.
+ * Orientation + Resize handler
  */
-function fitGameToViewport() {
-  const container = document.getElementById('game_container');
-  const canvas = document.getElementById('canvas');
-  if (!container || !canvas) return;
-
-  const baseW = 720;
-  const baseH = 480;
-  const viewportH = window.innerHeight;
-  const viewportW = window.innerWidth;
-
-  if (viewportW > 1024) {
-    container.style.width = baseW + 'px';
-    container.style.height = baseH + 'px';
-    canvas.style.width = baseW + 'px';
-    canvas.style.height = baseH + 'px';
-  } else {
-    container.style.width = viewportW + 'px';
-    container.style.height = viewportH + 'px';
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-  }
-}
-
-
 function handleResizeAndOrientation() {
   checkOrientation();
-  fitGameToViewport();
+  resizeGame();
 }
 
 
+// Register events
 window.addEventListener('load', handleResizeAndOrientation);
 window.addEventListener('resize', handleResizeAndOrientation);
 window.addEventListener('orientationchange', handleResizeAndOrientation);
