@@ -10,6 +10,10 @@ class Character extends MoveableObject {
     gravityInterval = null;
     isDead = false;
 
+    idleTimer = null;
+    sleeping = false;
+    idleDelay = 3000; 
+    
     IMAGES_WALKING = [
         './img/2_character_pepe/2_walk/W-21.png',
         './img/2_character_pepe/2_walk/W-22.png',
@@ -46,17 +50,30 @@ class Character extends MoveableObject {
     ];
 
     IMAGES_CHILL = [
-          './img/2_character_pepe/1_idle/idle/I-1.png',
-          './img/2_character_pepe/1_idle/idle/I-2.png',
-          './img/2_character_pepe/1_idle/idle/I-3.png',
-          './img/2_character_pepe/1_idle/idle/I-4.png',
-          './img/2_character_pepe/1_idle/idle/I-5.png',
-          './img/2_character_pepe/1_idle/idle/I-6.png',
-          './img/2_character_pepe/1_idle/idle/I-7.png',
-          './img/2_character_pepe/1_idle/idle/I-8.png',
-          './img/2_character_pepe/1_idle/idle/I-9.png',
-          './img/2_character_pepe/1_idle/idle/I-10.png',
-];
+        './img/2_character_pepe/1_idle/idle/I-1.png',
+        './img/2_character_pepe/1_idle/idle/I-2.png',
+        './img/2_character_pepe/1_idle/idle/I-3.png',
+        './img/2_character_pepe/1_idle/idle/I-4.png',
+        './img/2_character_pepe/1_idle/idle/I-5.png',
+        './img/2_character_pepe/1_idle/idle/I-6.png',
+        './img/2_character_pepe/1_idle/idle/I-7.png',
+        './img/2_character_pepe/1_idle/idle/I-8.png',
+        './img/2_character_pepe/1_idle/idle/I-9.png',
+        './img/2_character_pepe/1_idle/idle/I-10.png',
+    ];
+
+    IMAGES_SLEEP = [
+        './img/2_character_pepe/1_idle/long_idle/I-11.png',
+        './img/2_character_pepe/1_idle/long_idle/I-12.png',
+        './img/2_character_pepe/1_idle/long_idle/I-13.png',
+        './img/2_character_pepe/1_idle/long_idle/I-14.png',
+        './img/2_character_pepe/1_idle/long_idle/I-15.png',
+        './img/2_character_pepe/1_idle/long_idle/I-16.png',
+        './img/2_character_pepe/1_idle/long_idle/I-17.png',
+        './img/2_character_pepe/1_idle/long_idle/I-18.png',
+        './img/2_character_pepe/1_idle/long_idle/I-19.png',
+        './img/2_character_pepe/1_idle/long_idle/I-20.png',
+    ];
 
     IMAGES_DEAD_RESURRECTION = [
         './img/2_character_pepe/6_dead_end_fly/DEAD_fly_1.png',
@@ -72,7 +89,6 @@ class Character extends MoveableObject {
         './img/2_character_pepe/6_dead_end_fly/fly_4.png'
     ];
 
-
     world;
     offset = { top: 140, left: 30, right: 20, bottom: 15 };
     energy = 100;
@@ -80,7 +96,6 @@ class Character extends MoveableObject {
     acceleration = 2;
     isHurtFlag = false;
     otherDirection = false;
-
 
     /**
      * Constructor initializes character images, gravity, and animations.
@@ -94,15 +109,37 @@ class Character extends MoveableObject {
             this.loadImages(this.IMAGES_DEAD),
             this.loadImages(this.IMAGES_HURT),
             this.loadImages(this.IMAGES_CHILL),
+            this.loadImages(this.IMAGES_SLEEP),
             this.loadImages(this.IMAGES_DEAD_RESURRECTION),
             this.loadImages(this.IMAGES_DEAD_FLY_TO_SKY)
         ]).then(() => {
             this.applyGravity();
             this.animate();
             this.playAnimation(this.IMAGES_CHILL);
+            this.resetIdleTimer(); // Start idle timer
+            this.listenForKeys();  // Listen for input
         });
     }
 
+    /**
+     * Reset the idle timer, cancel sleep, and restart countdown.
+     */
+    resetIdleTimer() {
+        if (this.idleTimer) clearTimeout(this.idleTimer);
+        this.sleeping = false;
+        this.idleTimer = setTimeout(() => {
+            this.sleeping = true;
+        }, this.idleDelay);
+    }
+
+    /**
+     * Listen for key events and reset idle timer when pressed.
+     */
+    listenForKeys() {
+        window.addEventListener('keydown', () => {
+            this.resetIdleTimer();
+        });
+    }
 
     /**
      * Apply gravity to the character over time.
@@ -118,7 +155,6 @@ class Character extends MoveableObject {
             }
         }, 1000 / 25);
     }
-
 
     /**
      * Play a sequence of images as an animation.
@@ -139,7 +175,6 @@ class Character extends MoveableObject {
             }
         }, 150);
     }
-
 
     /**
      * Make the character fly upwards after death.
@@ -163,7 +198,6 @@ class Character extends MoveableObject {
         }, 100);
     }
 
-
     /**
      * Reduce character's energy by a specified amount.
      * @param {number} amount - Damage to apply.
@@ -178,7 +212,6 @@ class Character extends MoveableObject {
         }
     }
 
-
     /**
      * Start the death sequence for the character.
      */
@@ -191,7 +224,6 @@ class Character extends MoveableObject {
         this.playDeadAnimation();
     }
 
-
     /**
      * Play dead animation then resurrection animation.
      */
@@ -200,7 +232,6 @@ class Character extends MoveableObject {
             setTimeout(() => this.playResurrectionAnimation(), 1000);
         });
     }
-
 
     /**
      * Play resurrection animation and fly character to the sky.
@@ -215,7 +246,6 @@ class Character extends MoveableObject {
         });
     }
 
-
     /**
      * Animate movement and actions continuously.
      */
@@ -223,7 +253,6 @@ class Character extends MoveableObject {
         this.handleMovement();
         this.handleAnimation();
     }
-
 
     /**
      * Handle movement based on keyboard input.
@@ -239,7 +268,6 @@ class Character extends MoveableObject {
         }, 1000 / 60);
     }
 
-
     /**
      * Handle right movement input.
      */
@@ -249,7 +277,6 @@ class Character extends MoveableObject {
             this.otherDirection = false;
         }
     }
-
 
     /**
      * Handle left movement input.
@@ -262,7 +289,6 @@ class Character extends MoveableObject {
         }
     }
 
-
     /**
      * Handle jump input.
      */
@@ -272,33 +298,32 @@ class Character extends MoveableObject {
         }
     }
 
-
     /**
      * Handle animation based on state.
      */
-  handleAnimation() {
-    managedSetInterval(() => {
-        if (this.isDead) return;
-        if (this.isHurt()) {
-            this.playAnimation(this.IMAGES_HURT);
-        } else if (this.isAboveGround()) {
-            this.playAnimation(this.IMAGES_JUMPING);
-        } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-            this.playAnimation(this.IMAGES_WALKING);
-        } else {
-            this.playAnimation(this.IMAGES_CHILL);
-        }
-    }, 100);
-  }
+    handleAnimation() {
+        managedSetInterval(() => {
+            if (this.isDead) return;
+            if (this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+            } else if (this.isAboveGround()) {
+                this.playAnimation(this.IMAGES_JUMPING);
+            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+                this.playAnimation(this.IMAGES_WALKING);
+            } else if (this.sleeping) {
+                this.playAnimation(this.IMAGES_SLEEP);
+            } else {
+                this.playAnimation(this.IMAGES_CHILL);
+            }
+        }, 100);
+    }
 
-  
     /**
      * Make the character jump.
      */
     jump() {
         this.speedY = 30;
     }
-
 
     /**
      * Check if character is currently hurt.
