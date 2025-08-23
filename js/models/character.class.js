@@ -12,8 +12,9 @@ class Character extends MoveableObject {
 
     idleTimer = null;
     sleeping = false;
-    idleDelay = 3000; 
-    
+    idleDelay = 3000; // 3 seconds until sleep
+
+    // Animation image sets
     IMAGES_WALKING = [
         './img/2_character_pepe/2_walk/W-21.png',
         './img/2_character_pepe/2_walk/W-22.png',
@@ -97,6 +98,10 @@ class Character extends MoveableObject {
     isHurtFlag = false;
     otherDirection = false;
 
+
+    /**
+     * Constructor: loads images and starts animation/gravity
+     */
     constructor() {
         super().loadImage("./img/2_character_pepe/2_walk/W-21.png");
 
@@ -114,10 +119,14 @@ class Character extends MoveableObject {
             this.animate();
             this.playAnimation(this.IMAGES_CHILL);
             this.resetIdleTimer(); 
-            this.listenForKeys();  // Eingaben abhören
+            this.listenForKeys();
         });
     }
 
+
+    /**
+     * Resets idle timer (prevents sleep if called)
+     */
     resetIdleTimer() {
         if (this.idleTimer) clearTimeout(this.idleTimer);
         this.sleeping = false;
@@ -126,11 +135,13 @@ class Character extends MoveableObject {
         }, this.idleDelay);
     }
 
+
     /**
-     * Jetzt reagiert der Character auf:
-     * - Keyboard (keydown)
-     * - Maus (mousedown)
-     * - Touch (touchstart)
+     * Listens to inputs:
+     * - Keyboard: keydown
+     * - Mouse: mousedown
+     * - Touch: touchstart
+     * and resets idle timer.
      */
     listenForKeys() {
         const reset = () => this.resetIdleTimer();
@@ -139,6 +150,10 @@ class Character extends MoveableObject {
         window.addEventListener('touchstart', reset);
     }
 
+
+    /**
+     * Applies gravity effect to the character
+     */
     applyGravity() {
         if (this.gravityInterval) clearInterval(this.gravityInterval);
 
@@ -151,6 +166,10 @@ class Character extends MoveableObject {
         }, 1000 / 25);
     }
 
+
+    /**
+     * Plays an animation sequence from an array of images
+     */
     playAnimationSequence(imageArray, callback) {
         let index = 0;
         if (this.deadAnimationIntervalId) clearInterval(this.deadAnimationIntervalId);
@@ -166,6 +185,10 @@ class Character extends MoveableObject {
         }, 150);
     }
 
+
+    /**
+     * Plays fly-to-sky death animation
+     */
     flyToSky(callback) {
         if (this.deadFlyIntervalId) clearInterval(this.deadFlyIntervalId);
         this.deadAnimationIndex = 0;
@@ -184,6 +207,10 @@ class Character extends MoveableObject {
         }, 100);
     }
 
+
+    /**
+     * Reduces energy and checks for death
+     */
     takeDamage(amount) {
         if (this.isDead) return;
         this.energy -= amount;
@@ -194,6 +221,10 @@ class Character extends MoveableObject {
         }
     }
 
+
+    /**
+     * Starts death sequence of character
+     */
     startDeadSequence() {
         if (this.isDead) return;
         this.isDead = true;
@@ -203,12 +234,20 @@ class Character extends MoveableObject {
         this.playDeadAnimation();
     }
 
+
+    /**
+     * Plays initial dead animation before resurrection
+     */
     playDeadAnimation() {
         this.playAnimationSequence(this.IMAGES_DEAD, () => {
             setTimeout(() => this.playResurrectionAnimation(), 1000);
         });
     }
 
+
+    /**
+     * Plays resurrection animation before flying to sky
+     */
     playResurrectionAnimation() {
         this.playAnimationSequence(this.IMAGES_DEAD_RESURRECTION, () => {
             this.flyToSky(() => {
@@ -219,11 +258,19 @@ class Character extends MoveableObject {
         });
     }
 
+
+    /**
+     * Main animation loop (movement + animation)
+     */
     animate() {
         this.handleMovement();
         this.handleAnimation();
     }
 
+
+    /**
+     * Handles continuous movement
+     */
     handleMovement() {
         managedSetInterval(() => {
             if (!this.isDead) {
@@ -235,6 +282,10 @@ class Character extends MoveableObject {
         }, 1000 / 60);
     }
 
+
+    /**
+     * Handles moving right
+     */
     handleRight() {
         if (this.world.keyboard.RIGHT) {
             this.moveRight();
@@ -242,6 +293,10 @@ class Character extends MoveableObject {
         }
     }
 
+
+    /**
+     * Handles moving left
+     */
     handleLeft() {
         if (this.world.keyboard.LEFT) {
             this.moveLeft();
@@ -250,12 +305,20 @@ class Character extends MoveableObject {
         }
     }
 
+
+    /**
+     * Handles jumping
+     */
     handleJump() {
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
             this.jump();
         }
     }
 
+
+    /**
+     * Handles animation based on character state
+     */
     handleAnimation() {
         managedSetInterval(() => {
             if (this.isDead) return;
@@ -273,10 +336,18 @@ class Character extends MoveableObject {
         }, 100);
     }
 
+
+    /**
+     * Executes jump action
+     */
     jump() {
         this.speedY = 30;
     }
 
+
+    /**
+     * Returns true if character is hurt
+     */
     isHurt() {
         return this.isHurtFlag;
     }
