@@ -158,6 +158,7 @@ async function restartGame() {
   showGameUIElements();
   resetWorldAndCanvas();
   await initializeGame();
+    toggleFullscreen();
 }
 
 
@@ -168,6 +169,21 @@ function clearWorldRestartTimeout() {
   if (world?.restartButtonTimeout) {
     clearTimeout(world.restartButtonTimeout);
     world.restartButtonTimeout = null;
+  }
+}
+
+
+/**
+ * Toggles fullscreen mode.
+ */
+function toggleFullscreen() {
+  const container = document.getElementById('game_container');
+  if (!document.fullscreenElement) {
+    container.requestFullscreen();
+    isFullscreenActive = true;
+  } else {
+    document.exitFullscreen();
+    isFullscreenActive = false;
   }
 }
 

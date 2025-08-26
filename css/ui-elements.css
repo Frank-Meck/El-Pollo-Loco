@@ -28,6 +28,28 @@
   transform: translate(-2px, -2px);
 }
 
+/* === Fullscreen Button oben rechts === */
+.btn_fullscreen {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: rgba(255, 165, 0);
+  color: rgb(15, 13, 13);
+  border: 2px solid #ff6600;
+  border-radius: 10px;
+  padding: 2px 8px;
+  font-size: 20px;
+  cursor: pointer;
+  font-family: 'zabras', Arial, Helvetica, sans-serif;
+  z-index: 10000;
+}
+
+.btn_fullscreen:hover {
+  background: rgba(255, 17, 0, 0.918);
+  color:white;
+}
+
+
 #restart_btn {
   position: absolute;
   top: 200px;
