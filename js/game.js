@@ -3,6 +3,9 @@ let world;
 let keyboard = new Keyboard(); 
 const activeIntervals = [];
 let gameStarted = false;
+let originalCanvasWidth = 720;
+let originalCanvasHeight = 480;
+let wasFullscreen = false;
 
 
 /**
@@ -76,9 +79,10 @@ function startGame() {
   document.getElementById('restart_btn').style.display = 'none';
   clearAllIntervals();
 
+  gameStarted = true;
+
   init().then(() => {
     if (world) {
-      world.setMobileControlsVisibility(true);
       showMobileControlsIfTouch();
     }
   });
@@ -135,6 +139,38 @@ function closeImpressum() {
 
 
 /**
+ * Enables touch and mouse scrolling for all .scrollable elements
+ */
+function enableScrollableTouch() {
+    const scrollables = document.querySelectorAll('.scrollable');
+
+    scrollables.forEach(el => {
+
+        el.addEventListener('touchstart', function(e) {
+            this.startY = e.touches[0].clientY;
+            this.startScroll = this.scrollTop;
+        }, { passive: true });
+
+        el.addEventListener('touchmove', function(e) {
+            const touchY = e.touches[0].clientY;
+            const deltaY = this.startY - touchY;
+
+            this.scrollTop = this.startScroll + deltaY;
+            e.stopPropagation();
+        }, { passive: false });
+
+
+        el.addEventListener('wheel', function(e) {
+            this.scrollTop += e.deltaY;
+            e.preventDefault();
+        }, { passive: false });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', enableScrollableTouch);
+
+
+/**
  * Delays the display of the restart button after Game Over / You Win
  */
 function showRestartButtonWithDelay() {
@@ -150,15 +186,18 @@ function showRestartButtonWithDelay() {
 
 
 /**
- * Restarts the game by clearing timeouts, resetting the world and canvas,
- * reinitializing the game, and updating UI elements.
+ * Restarts the game.
  */
 async function restartGame() {
   clearWorldRestartTimeout();
   showGameUIElements();
   resetWorldAndCanvas();
   await initializeGame();
-    toggleFullscreen();
+  if (wasFullscreen && !document.fullscreenElement) {
+    document.getElementById('game_container').requestFullscreen();
+  } else if (!wasFullscreen && document.fullscreenElement) {
+    document.exitFullscreen();
+  }
 }
 
 
@@ -179,13 +218,87 @@ function clearWorldRestartTimeout() {
 function toggleFullscreen() {
   const container = document.getElementById('game_container');
   if (!document.fullscreenElement) {
-    container.requestFullscreen();
-    isFullscreenActive = true;
+    container.requestFullscreen().then(() => {
+      container.classList.add('fullscreen-active');
+      wasFullscreen = true;
+      resizeCanvasAndUI();
+    });
   } else {
-    document.exitFullscreen();
-    isFullscreenActive = false;
+    document.exitFullscreen().then(() => {
+      container.classList.remove('fullscreen-active');
+      wasFullscreen = false;
+      resizeCanvasAndUI();
+    });
   }
 }
+
+
+/**
+ * Resizes canvas and UI, sorgt dafür, dass mobile Controls sichtbar bleiben.
+ */
+// Main function to resize canvas and adjust UI
+function resizeCanvasAndUI() {
+    resizeGameCanvas();
+    adjustMobileControls();
+    adjustUIElements();
+}
+
+
+/**
+* Resize the game canvas depending on fullscreen or original size
+*/
+function resizeGameCanvas() {
+    const canvas = document.getElementById('canvas');
+    if (document.fullscreenElement) {
+        canvas.style.width = window.innerWidth + "px";
+        canvas.style.height = window.innerHeight + "px";
+    } else {
+        canvas.style.width = originalCanvasWidth + "px";
+        canvas.style.height = originalCanvasHeight + "px";
+    }
+}
+
+
+/**
+* Show and position mobile controls if on a touch device and game has started
+*/
+function adjustMobileControls() {
+    const mobileControls = document.querySelector('.mobile_controls');
+    if (mobileControls && isTouchDevice() && gameStarted) {
+        mobileControls.style.display = 'flex';
+        mobileControls.style.position = "absolute";
+        mobileControls.style.bottom = "10px";
+        mobileControls.style.left = "50%";
+        mobileControls.style.transform = "translateX(-50%)";
+        mobileControls.style.zIndex = 10;
+    }
+}
+
+
+/**
+* Position other UI elements like restart button and audio controls
+*/
+function adjustUIElements() {
+    document.querySelectorAll('#restart_btn, .audio_controls').forEach(el => {
+        el.style.position = "absolute";
+        el.style.zIndex = 10;
+    });
+}
+
+
+/**
+* Helper function to detect touch devices
+*/
+function isTouchDevice() {
+    return ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+}
+
+
+/**
+* Fullscreen und Resize Listener
+*/
+document.addEventListener('fullscreenchange', resizeCanvasAndUI);
+window.addEventListener('resize', resizeCanvasAndUI);
 
 
 /**
@@ -202,12 +315,14 @@ function showGameUIElements() {
 
 
 /**
- * Blendet die mobilen Buttons ein, falls Touch erkannt wird.
+ * Blendet die mobilen Buttons ein, falls Touch erkannt wird und Spiel gestartet.
  */
 function showMobileControlsIfTouch() {
-  if (isTouchDevice()) {
-    const mobileControls = document.querySelector('.mobile_controls');
-    if (mobileControls) mobileControls.style.display = 'flex';
+  const mobileControls = document.querySelector('.mobile_controls');
+  if (isTouchDevice() && gameStarted && mobileControls) {
+    mobileControls.style.display = 'flex';
+  } else if (mobileControls) {
+    mobileControls.style.display = 'none';
   }
 }
 
@@ -231,7 +346,6 @@ function resetWorldAndCanvas() {
  */
 async function initializeGame() {
   await init();
-  world?.setMobileControlsVisibility(true);
   showMobileControlsIfTouch();
 }
 
@@ -264,7 +378,6 @@ window.addEventListener("keydown", (e) => {
   }
   if (e.keyCode === 68) keyboard.D = true;
 });
-
 
 window.addEventListener("keyup", (e) => {
   if (e.keyCode === 39) keyboard.RIGHT = false;
@@ -308,14 +421,6 @@ function bindMobileButton(buttonId, key) {
     keyboard[key] = true;
   });
   button.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    keyboard[key] = false;
-  });
-  button.addEventListener('mousedown', (e) => {
-    e.preventDefault();
-    keyboard[key] = true;
-  });
-  button.addEventListener('mouseup', (e) => {
     e.preventDefault();
     keyboard[key] = false;
   });

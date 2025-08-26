@@ -52,8 +52,8 @@
 
 #restart_btn {
   position: absolute;
-  top: 200px;
-  left: 400px;
+  top: 50%;
+  left: 50%;
   display: none;
   transform: translate(-50%, -50%);
   font-size: 36px;
@@ -116,6 +116,12 @@
   background-color: #ff3300;
   color: black;
   box-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+}
+
+.scrollable {
+  overflow-y: auto;       
+  -webkit-overflow-scrolling: touch; 
+  max-height: 80vh;       
 }
 
 .info_content.scrollable {

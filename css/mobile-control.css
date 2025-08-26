@@ -1,21 +1,22 @@
+/* Grundlegendes Styling für die mobile Steuerung */
 .mobile_controls {
-  display: none; 
-  position: absolute; 
+  display: none; /* Standard: unsichtbar → Sichtbarkeit nur durch JS */
+  position: absolute; /* über dem Canvas */
   bottom: 20px;
   width: 100%;
   justify-content: space-between;
   pointer-events: auto;
-  z-index: 50; 
+  z-index: 50; /* über Canvas */
 }
 
-
+/* Gruppen-Anordnung der Buttons */
 .mobile_controls .control_group {
   display: flex;
   gap: 20px;
   pointer-events: auto;
 }
 
-
+/* Styling der Buttons */
 .mobile_controls button {
   background: rgba(255, 102, 0, 0.9);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
@@ -38,6 +39,7 @@
   box-shadow: 0 0 12px 3px rgba(255, 69, 0, 0.7);
 }
 
+/* Skalierung des Canvas */
 .canvas_container {
   display: flex;
   justify-content: center;
@@ -85,9 +87,9 @@ canvas {
   }
 }
 
-/* PCs: Mobile Controls bleiben unsichtbar */
-@media (min-width: 1025px) {
+
+@media (max-width: 1280px) { /* Tablets bis 1280px */
   .mobile_controls {
- 
+
   }
 }

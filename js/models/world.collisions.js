@@ -431,7 +431,7 @@ World.prototype.drawEndbossStatusBarIfNeeded = function () {
   }
   if (this.endbossHasAppeared && this.coinCounter === this.maxCoins && this.endbossStatusBar) {
     this.endbossStatusBar.x = this.canvas.width - this.endbossStatusBar.width - 10;
-    this.endbossStatusBar.y = 20;
+    this.endbossStatusBar.y = 30;
     this.addToMap(this.endbossStatusBar);
   }
 };
@@ -475,7 +475,7 @@ World.prototype.drawCountdown = function () {
   this.ctx.font = "30px 'zabras', Arial, Helvetica, sans-serif";
   this.ctx.textAlign = 'right';
   this.ctx.fillStyle = isCritical ? (shouldBlink ? 'red' : 'black') : 'black';
-  this.ctx.fillText(time, this.canvas.width - 10, 30);
+  this.ctx.fillText(time, this.canvas.width - 50, 25);
 };
 
 
