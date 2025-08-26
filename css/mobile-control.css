@@ -1,25 +1,20 @@
 .mobile_controls {
-  display: none;
+  display: none; 
+  position: absolute; 
+  bottom: 20px;
+  width: 100%;
+  justify-content: space-between;
+  pointer-events: auto;
+  z-index: 50; 
 }
 
-.rotate_content {
+
+.mobile_controls .control_group {
   display: flex;
-  text-align: center;
+  gap: 20px;
+  pointer-events: auto;
 }
 
-.mobile_info {
-  font-size: 36px;
-}
-
-.left_controls {
-  flex: 1;
-  justify-content: flex-start;
-}
-
-.right_controls {
-  flex: 1;
-  justify-content: flex-end;
-}
 
 .mobile_controls button {
   background: rgba(255, 102, 0, 0.9);
@@ -56,29 +51,43 @@
 canvas {
   display: block;
   margin: auto;
-  aspect-ratio: 3 / 2;   
-  max-width: 100vw;      
-  max-height: 100vh;     
-  width: 100%;           
-  height: auto;         
+  aspect-ratio: 3 / 2;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100%;
+  height: auto;
 }
 
-@media (max-width: 900px) {
-  .mobile_controls {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 0 20px;
-    pointer-events: none;
-    z-index: 9999;
-  }
+/* ======================
+   MEDIA QUERIES
+   ====================== */
 
-  .mobile_controls .control_group {
-    display: flex;
-    gap: 20px;
-    pointer-events: auto;
+/* Kleine Geräte: Buttons etwas kleiner */
+@media (max-width: 1024px) {
+  .mobile_controls button {
+    height: 50px;
+    width: 50px;
+    font-size: 18px;
+  }
+}
+
+/* Portrait-Modus */
+@media (orientation: portrait) {
+  .mobile_controls {
+    bottom: 15px;
+  }
+}
+
+/* Landscape-Modus */
+@media (orientation: landscape) {
+  .mobile_controls {
+    bottom: 10px;
+  }
+}
+
+/* PCs: Mobile Controls bleiben unsichtbar */
+@media (min-width: 1025px) {
+  .mobile_controls {
+ 
   }
 }

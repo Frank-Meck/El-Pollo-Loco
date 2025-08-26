@@ -4,6 +4,15 @@ let keyboard = new Keyboard();
 const activeIntervals = [];
 let gameStarted = false;
 
+
+/**
+ * Prüft, ob das Gerät Touch unterstützt.
+ */
+function isTouchDevice() {
+  return navigator.maxTouchPoints > 0 || 'ontouchstart' in window || navigator.msMaxTouchPoints > 0;
+}
+
+
 /**
  * Sets an interval and stores its ID for later management.
  */
@@ -13,6 +22,7 @@ function managedSetInterval(callback, time) {
   return id;
 }
 
+
 /**
  * Clears all stored intervals.
  */
@@ -20,6 +30,7 @@ function clearAllIntervals() {
   activeIntervals.forEach(clearInterval);
   activeIntervals.length = 0;
 }
+
 
 /**
  * Creates the status bar objects.
@@ -33,6 +44,7 @@ function createStatusBars() {
   };
 }
 
+
 /**
  * Loads and initializes all status bars asynchronously.
  */
@@ -43,6 +55,7 @@ async function initializeStatusBars(statusBars) {
   await statusBars.endbossBar.loadAndInit(statusBars.endbossBar.IMAGES_ENDBOSS, 100);
 }
 
+
 /**
  * Adds the status bars to the game world.
  */
@@ -52,6 +65,7 @@ function addStatusBarsToWorld(statusBars) {
   world.bottleStatusBar = statusBars.bottleBar;
   world.endbossStatusBar = statusBars.endbossBar;
 }
+
 
 /**
  * Starts the game, toggles UI elements, and initializes the game.
@@ -65,9 +79,11 @@ function startGame() {
   init().then(() => {
     if (world) {
       world.setMobileControlsVisibility(true);
+      showMobileControlsIfTouch();
     }
   });
 }
+
 
 /**
  * Shows the controls screen.
@@ -78,6 +94,7 @@ function showControls() {
   document.getElementById('restart_btn').style.display = 'none';
 }
 
+
 /**
  * Shows the info screen.
  */
@@ -86,6 +103,7 @@ function showInfo() {
   document.getElementById('info_screen').style.display = 'flex';
   document.getElementById('restart_btn').style.display = 'none';
 }
+
 
 /**
  * Closes info/controls and shows start screen.
@@ -97,6 +115,7 @@ function closeInfo() {
   document.getElementById('restart_btn').style.display = 'none';
 }
 
+
 /**
  * Shows the Impressum screen.
  */
@@ -105,6 +124,7 @@ function showImpressum() {
   document.getElementById('impressum_screen').style.display = 'flex';
 }
 
+
 /**
  * Closes the Impressum screen.
  */
@@ -112,6 +132,7 @@ function closeImpressum() {
   document.getElementById('impressum_screen').style.display = 'none';
   document.getElementById('start_screen').style.display = 'flex';
 }
+
 
 /**
  * Delays the display of the restart button after Game Over / You Win
@@ -127,6 +148,7 @@ function showRestartButtonWithDelay() {
   }, 2000); 
 }
 
+
 /**
  * Restarts the game by clearing timeouts, resetting the world and canvas,
  * reinitializing the game, and updating UI elements.
@@ -138,6 +160,7 @@ async function restartGame() {
   await initializeGame();
 }
 
+
 /**
  * Clears any existing restart button timeout in the world object.
  */
@@ -148,6 +171,7 @@ function clearWorldRestartTimeout() {
   }
 }
 
+
 /**
  * Shows main game UI elements and hides the restart button.
  */
@@ -156,7 +180,21 @@ function showGameUIElements() {
   document.getElementById('mute_btn_game').style.display = 'inline-block';
   document.getElementById('volume_slider_game').style.display = 'inline-block';
   document.getElementById('restart_btn').style.display = 'none';
+
+  showMobileControlsIfTouch();
 }
+
+
+/**
+ * Blendet die mobilen Buttons ein, falls Touch erkannt wird.
+ */
+function showMobileControlsIfTouch() {
+  if (isTouchDevice()) {
+    const mobileControls = document.querySelector('.mobile_controls');
+    if (mobileControls) mobileControls.style.display = 'flex';
+  }
+}
+
 
 /**
  * Stops all world animations, intervals, and clears the canvas.
@@ -171,13 +209,16 @@ function resetWorldAndCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+
 /**
  * Reinitializes the game.
  */
 async function initializeGame() {
   await init();
   world?.setMobileControlsVisibility(true);
+  showMobileControlsIfTouch();
 }
+
 
 /**
  * Initializes the game, canvas, and status bars.
@@ -188,10 +229,12 @@ async function init() {
   await initializeStatusBars(statusBars);
   world = new World(canvas, keyboard);
   addStatusBarsToWorld(statusBars);
-  if (window.innerWidth <= 1024) {
+
+  if (isTouchDevice()) {
     setupMobileControls();
   }
 }
+
 
 /**
  * Keyboard event handling.
@@ -206,6 +249,7 @@ window.addEventListener("keydown", (e) => {
   if (e.keyCode === 68) keyboard.D = true;
 });
 
+
 window.addEventListener("keyup", (e) => {
   if (e.keyCode === 39) keyboard.RIGHT = false;
   if (e.keyCode === 37) keyboard.LEFT = false;
@@ -216,6 +260,7 @@ window.addEventListener("keyup", (e) => {
   if (e.keyCode === 68) keyboard.D = false;
 });
 
+
 /**
  * Sets up mobile touch controls.
  */
@@ -224,6 +269,7 @@ function setupMobileControls() {
   bindMobileButton('btn_move_right', 'RIGHT');
   bindMobileButton('btn_jump', 'SPACE');
   bindMobileButton('btn_throw', 'D');
+
   const impressumBtn = document.getElementById('impressum_btn');
   if (impressumBtn) {
     impressumBtn.addEventListener('touchstart', (e) => {
@@ -233,12 +279,14 @@ function setupMobileControls() {
   }
 }
 
+
 /**
  * Binds a mobile button to a keyboard flag.
  */
 function bindMobileButton(buttonId, key) {
   const button = document.getElementById(buttonId);
   if (!button) return;
+
   button.addEventListener('touchstart', (e) => {
     e.preventDefault();
     keyboard[key] = true;
