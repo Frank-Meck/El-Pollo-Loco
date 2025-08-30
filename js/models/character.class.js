@@ -118,7 +118,7 @@ class Character extends MoveableObject {
             this.applyGravity();
             this.animate();
             this.playAnimation(this.IMAGES_CHILL);
-            this.resetIdleTimer(); 
+            this.resetIdleTimer();
             this.listenForKeys();
         });
     }
@@ -288,8 +288,13 @@ class Character extends MoveableObject {
      */
     handleRight() {
         if (this.world.keyboard.RIGHT) {
-            this.moveRight();
-            this.otherDirection = false;
+            const levelEnd = this.world.level.level_end_x;
+            if (this.x + this.width < levelEnd) {
+                this.moveRight();
+                this.otherDirection = false;
+            } else {
+                this.x = levelEnd - this.width;
+            }
         }
     }
 

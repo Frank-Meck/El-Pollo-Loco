@@ -8,7 +8,7 @@ class Level {
     backgroundObjects;
     coins;
     bottles; 
-    level_end_x = 4200;
+    level_end_x = 4400;
 
     
     /**
