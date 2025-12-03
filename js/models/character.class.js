@@ -12,9 +12,8 @@ class Character extends MoveableObject {
 
     idleTimer = null;
     sleeping = false;
-    idleDelay = 3000; // 3 seconds until sleep
+    idleDelay = 3000;
 
-    // Animation image sets
     IMAGES_WALKING = [
         './img/2_character_pepe/2_walk/W-21.png',
         './img/2_character_pepe/2_walk/W-22.png',
@@ -60,7 +59,7 @@ class Character extends MoveableObject {
         './img/2_character_pepe/1_idle/idle/I-7.png',
         './img/2_character_pepe/1_idle/idle/I-8.png',
         './img/2_character_pepe/1_idle/idle/I-9.png',
-        './img/2_character_pepe/1_idle/idle/I-10.png',
+        './img/2_character_pepe/1_idle/idle/I-10.png'
     ];
 
     IMAGES_SLEEP = [
@@ -73,7 +72,7 @@ class Character extends MoveableObject {
         './img/2_character_pepe/1_idle/long_idle/I-17.png',
         './img/2_character_pepe/1_idle/long_idle/I-18.png',
         './img/2_character_pepe/1_idle/long_idle/I-19.png',
-        './img/2_character_pepe/1_idle/long_idle/I-20.png',
+        './img/2_character_pepe/1_idle/long_idle/I-20.png'
     ];
 
     IMAGES_DEAD_RESURRECTION = [
@@ -100,21 +99,13 @@ class Character extends MoveableObject {
 
 
     /**
-     * Constructor: loads images and starts animation/gravity
+     * Constructor: sets world and preloads images
+     * @param {object} world
      */
-    constructor() {
-        super().loadImage("./img/2_character_pepe/2_walk/W-21.png");
-
-        Promise.all([
-            this.loadImages(this.IMAGES_WALKING),
-            this.loadImages(this.IMAGES_JUMPING),
-            this.loadImages(this.IMAGES_DEAD),
-            this.loadImages(this.IMAGES_HURT),
-            this.loadImages(this.IMAGES_CHILL),
-            this.loadImages(this.IMAGES_SLEEP),
-            this.loadImages(this.IMAGES_DEAD_RESURRECTION),
-            this.loadImages(this.IMAGES_DEAD_FLY_TO_SKY)
-        ]).then(() => {
+    constructor(world) {
+        super().loadImage(this.IMAGES_WALKING[0]);
+        this.world = world;
+        this.preloadAllImages().then(() => {
             this.applyGravity();
             this.animate();
             this.playAnimation(this.IMAGES_CHILL);
@@ -125,23 +116,34 @@ class Character extends MoveableObject {
 
 
     /**
-     * Resets idle timer (prevents sleep if called)
+     * Preloads all images for the character
      */
-    resetIdleTimer() {
-        if (this.idleTimer) clearTimeout(this.idleTimer);
-        this.sleeping = false;
-        this.idleTimer = setTimeout(() => {
-            this.sleeping = true;
-        }, this.idleDelay);
+    async preloadAllImages() {
+        await Promise.all([
+            this.loadImages(this.IMAGES_WALKING),
+            this.loadImages(this.IMAGES_JUMPING),
+            this.loadImages(this.IMAGES_DEAD),
+            this.loadImages(this.IMAGES_HURT),
+            this.loadImages(this.IMAGES_CHILL),
+            this.loadImages(this.IMAGES_SLEEP),
+            this.loadImages(this.IMAGES_DEAD_RESURRECTION),
+            this.loadImages(this.IMAGES_DEAD_FLY_TO_SKY)
+        ]);
     }
 
 
     /**
-     * Listens to inputs:
-     * - Keyboard: keydown
-     * - Mouse: mousedown
-     * - Touch: touchstart
-     * and resets idle timer.
+     * Resets the idle timer for sleeping detection
+     */
+    resetIdleTimer() {
+        if (this.idleTimer) clearTimeout(this.idleTimer);
+        this.sleeping = false;
+        this.idleTimer = setTimeout(() => this.sleeping = true, this.idleDelay);
+    }
+
+
+    /**
+     * Listen for keys/mouse/touch to reset idle timer
      */
     listenForKeys() {
         const reset = () => this.resetIdleTimer();
@@ -152,28 +154,32 @@ class Character extends MoveableObject {
 
 
     /**
-     * Applies gravity effect to the character
+     * Apply gravity using interval
      */
     applyGravity() {
         if (this.gravityInterval) clearInterval(this.gravityInterval);
-
-        this.gravityInterval = setInterval(() => {
-            this.lastY = this.y;
-            if (this.isAboveGround() || this.speedY > 0) {
-                this.y -= this.speedY;
-                this.speedY -= this.acceleration;
-            }
-        }, 1000 / 25);
+        this.gravityInterval = setInterval(() => this.updateGravity(), 1000 / 25);
     }
 
 
     /**
-     * Plays an animation sequence from an array of images
+     * Update position due to gravity
+     */
+    updateGravity() {
+        this.lastY = this.y;
+        if (this.isAboveGround() || this.speedY > 0) {
+            this.y -= this.speedY;
+            this.speedY -= this.acceleration;
+        }
+    }
+
+
+    /**
+     * Plays a sequence of images with optional callback
      */
     playAnimationSequence(imageArray, callback) {
         let index = 0;
         if (this.deadAnimationIntervalId) clearInterval(this.deadAnimationIntervalId);
-
         this.deadAnimationIntervalId = setInterval(() => {
             if (index < imageArray.length) {
                 this.img = this.imageCache[imageArray[index]];
@@ -187,43 +193,44 @@ class Character extends MoveableObject {
 
 
     /**
-     * Plays fly-to-sky death animation
+     * Fly character into the sky after death
      */
     flyToSky(callback) {
         if (this.deadFlyIntervalId) clearInterval(this.deadFlyIntervalId);
         this.deadAnimationIndex = 0;
-
-        this.deadFlyIntervalId = setInterval(() => {
-            if (this.deadAnimationIndex < this.IMAGES_DEAD_FLY_TO_SKY.length) {
-                this.img = this.imageCache[this.IMAGES_DEAD_FLY_TO_SKY[this.deadAnimationIndex]];
-                this.deadAnimationIndex++;
-            }
-            this.y -= 35;
-
-            if (this.y + this.height <= 0) {
-                clearInterval(this.deadFlyIntervalId);
-                if (callback) callback();
-            }
-        }, 100);
+        this.deadFlyIntervalId = setInterval(() => this.updateFly(callback), 100);
     }
 
 
     /**
-     * Reduces energy and checks for death
+     * Updates fly-to-sky animation
      */
-    takeDamage(amount) {
-        if (this.isDead) return;
-        this.energy -= amount;
-        if (this.energy <= 0) {
-            this.startDeadSequence();
-        } else {
-            this.isHurtFlag = true;
+    updateFly(callback) {
+        if (this.deadAnimationIndex < this.IMAGES_DEAD_FLY_TO_SKY.length) {
+            this.img = this.imageCache[this.IMAGES_DEAD_FLY_TO_SKY[this.deadAnimationIndex]];
+            this.deadAnimationIndex++;
+        }
+        this.y -= 35;
+        if (this.y + this.height <= 0) {
+            clearInterval(this.deadFlyIntervalId);
+            if (callback) callback();
         }
     }
 
 
     /**
-     * Starts death sequence of character
+     * Takes damage and triggers dead sequence if necessary
+     */
+    takeDamage(amount) {
+        if (this.isDead) return;
+        this.energy -= amount;
+        if (this.energy <= 0) this.startDeadSequence();
+        else this.isHurtFlag = true;
+    }
+
+
+    /**
+     * Starts the death sequence
      */
     startDeadSequence() {
         if (this.isDead) return;
@@ -236,7 +243,7 @@ class Character extends MoveableObject {
 
 
     /**
-     * Plays initial dead animation before resurrection
+     * Play dead animation sequence
      */
     playDeadAnimation() {
         this.playAnimationSequence(this.IMAGES_DEAD, () => {
@@ -246,21 +253,19 @@ class Character extends MoveableObject {
 
 
     /**
-     * Plays resurrection animation before flying to sky
+     * Play resurrection animation sequence
      */
     playResurrectionAnimation() {
         this.playAnimationSequence(this.IMAGES_DEAD_RESURRECTION, () => {
             this.flyToSky(() => {
-                if (this.world && typeof this.world.endGame === 'function') {
-                    this.world.endGame(false);
-                }
+                if (this.world?.endGame) this.world.endGame(false);
             });
         });
     }
 
 
     /**
-     * Main animation loop (movement + animation)
+     * Animate character continuously
      */
     animate() {
         this.handleMovement();
@@ -269,7 +274,7 @@ class Character extends MoveableObject {
 
 
     /**
-     * Handles continuous movement
+     * Handle movement logic
      */
     handleMovement() {
         managedSetInterval(() => {
@@ -277,33 +282,29 @@ class Character extends MoveableObject {
                 this.handleRight();
                 this.handleLeft();
                 this.handleJump();
-                this.world.camera_x = 0 - this.x + 100;
+                if (this.world) this.world.camera_x = 0 - this.x + 100;
             }
         }, 1000 / 60);
     }
 
 
     /**
-     * Handles moving right
+     * Handle right movement
      */
     handleRight() {
-        if (this.world.keyboard.RIGHT) {
+        if (this.world?.keyboard?.RIGHT) {
             const levelEnd = this.world.level.level_end_x;
-            if (this.x + this.width < levelEnd) {
-                this.moveRight();
-                this.otherDirection = false;
-            } else {
-                this.x = levelEnd - this.width;
-            }
+            if (this.x + this.width < levelEnd) this.moveRight(), this.otherDirection = false;
+            else this.x = levelEnd - this.width;
         }
     }
 
 
     /**
-     * Handles moving left
+     * Handle left movement
      */
     handleLeft() {
-        if (this.world.keyboard.LEFT) {
+        if (this.world?.keyboard?.LEFT) {
             this.moveLeft();
             this.otherDirection = true;
             if (this.x < 0) this.x = 0;
@@ -312,44 +313,36 @@ class Character extends MoveableObject {
 
 
     /**
-     * Handles jumping
+     * Handle jump movement
      */
     handleJump() {
-        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-            this.jump();
-        }
+        if (this.world?.keyboard?.SPACE && !this.isAboveGround()) this.jump();
     }
 
 
     /**
-     * Handles animation based on character state
+     * Handle animation logic
      */
     handleAnimation() {
         managedSetInterval(() => {
             if (this.isDead) return;
-            if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-            } else if (this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMPING);
-            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.playAnimation(this.IMAGES_WALKING);
-            } else if (this.sleeping) {
-                this.playAnimation(this.IMAGES_SLEEP);
-            } else {
-                this.playAnimation(this.IMAGES_CHILL);
-            }
+            if (this.isHurt()) this.playAnimation(this.IMAGES_HURT);
+            else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
+            else if (this.world?.keyboard?.RIGHT || this.world?.keyboard?.LEFT) this.playAnimation(this.IMAGES_WALKING);
+            else if (this.sleeping) this.playAnimation(this.IMAGES_SLEEP);
+            else this.playAnimation(this.IMAGES_CHILL);
         }, 100);
     }
 
 
     /**
-     * Executes jump action
+     * Jump action
      */
     jump() {
         this.speedY = 30;
     }
 
-
+    
     /**
      * Returns true if character is hurt
      */

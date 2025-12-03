@@ -44,7 +44,7 @@ body {
 .canvas_container {
   position: relative;
   width: 100%;
-  height: 100vh; /* volle Bildschirmhöhe */
+  height: 100vh; 
   overflow: hidden;
 }
 
@@ -121,4 +121,46 @@ p {
 
 #restart_button {
     display: none;
+}
+
+
+.loading_box {
+  background: rgba(10,10,10,0.9);
+  border-radius: 12px;
+  padding: 30px;
+  width: 300px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+}
+
+#loading_text {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.loading_bar_bg {
+  width: 100%;
+  height: 16px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.loading_bar_fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #ffcc00, #ff6600);
+  transition: width 0.2s ease;
+}
+#loading_screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  display: none;
+  z-index: 999999;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
 }

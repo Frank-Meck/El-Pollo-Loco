@@ -1,22 +1,4 @@
 /**
- * Hides the start screen and shows the controls screen.
- */
-function showControls() {
-    document.getElementById('start_screen').style.display = 'none';
-    document.getElementById('controls_screen').style.display = 'block';
-}
-
-
-/**
- * Hides the start screen and shows the info screen.
- */
-function showInfo() {
-    document.getElementById('start_screen').style.display = 'none';
-    document.getElementById('info_screen').style.display = 'block';
-}
-
-
-/**
  * Hides the start screen and shows the impressum screen.
  */
 function showImpressum() {

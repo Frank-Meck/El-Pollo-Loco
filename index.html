@@ -13,43 +13,58 @@
   <link rel="stylesheet" href="./css/basic_settings.css">
   <link rel="stylesheet" href="./css/mobile-control.css">
 
-  <script src="./js/models/impressum.js"></script>
-  <script src="./js/models/audio.js"></script>
-  <script src="./js/models/drawable-object.class.js"></script>
-  <script src="./js/models/moveable-object.class.js"></script>
-  <script src="./js/models/throwable-Object.js"></script>
-  <script src="./js/models/countdown-timer.class.js"></script>
-  <script src="./js/models/character.class.js"></script>
-  <script src="./js/models/chicken.class.js"></script>
-  <script src="./js/models/smallchicken.class.js"></script>
-  <script src="./js/models/endboss.class.js"></script>
-  <script src="./js/models/cloud.class.js"></script>
-  <script src="./js/models/coin.class.js"></script>
-  <script src="./js/models/bottle.class.js"></script>
-  <script src="./js/models/status-bar.class.js"></script>
-  <script src="./js/models/StatusBar/status-bar-health.class.js"></script>
-  <script src="./js/models/StatusBar/status-bar-coins.class.js"></script>
-  <script src="./js/models/StatusBar/status-bar-bottels.class.js"></script>
-  <script src="./js/models/StatusBar/status-bar-endboss.class.js"></script>
-  <script src="./js/models/background-objects.class.js"></script>
-  <script src="./js/models/level.class.js"></script>
-  <script src="./Levels/level1.js"></script>
-  <script src="./js/models/world.class.js"></script>
-  <script src="./js/models/world.collisions.js"></script>
-  <script src="./js/models/keyboard.class.js"></script>
+    <script src="./js/models/impressum.js" defer></script>
+  <script src="./js/models/audio.js" defer></script>
+  <script src="./js/models/drawable-object.class.js" defer></script>
+  <script src="./js/models/moveable-object.class.js" defer></script>
+  <script src="./js/models/throwable-Object.js" defer></script>
+  <script src="./js/models/countdown-timer.class.js" defer></script>
+  <script src="./js/models/character.class.js" defer></script>
+  <script src="./js/models/chicken.class.js" defer></script>
+  <script src="./js/models/smallchicken.class.js" defer></script>
+  <script src="./js/models/endboss.class.js" defer></script>
+  <script src="./js/models/cloud.class.js" defer></script>
+  <script src="./js/models/coin.class.js" defer></script>
+  <script src="./js/models/bottle.class.js" defer></script>
+  <script src="./js/models/status-bar.class.js" defer></script>
+  <script src="./js/models/StatusBar/status-bar-health.class.js" defer></script>
+  <script src="./js/models/StatusBar/status-bar-coins.class.js" defer></script>
+  <script src="./js/models/StatusBar/status-bar-bottles.class.js" defer></script>
+  <script src="./js/models/StatusBar/status-bar-endboss.class.js" defer></script>
+  <script src="./js/models/background-objects.class.js" defer></script>
+  <script src="./js/models/level.class.js" defer></script>
+  <script src="./Levels/level1.js" defer></script>
+  <script src="./js/models/world.class.js" defer></script>
+  <script src="./js/models/world.collisions.js" defer></script>
+  <script src="./js/models/keyboard.class.js" defer></script>
   <script src="./js/game.js" defer></script>
   <script src="./js/models/start-screen.class.js" defer></script>
   <script src="./js/models/mobile-check.js"></script>
 </head>
 
 <body>
+
+ 
   <div id="rotate_message">
     <div class="rotate_content">
-      <p claSS="mobile_info">Bitte Smartphone drehen, um zu spielen</p>
+      <p class="mobile_info">Bitte Smartphone drehen, um zu spielen</p>
     </div>
   </div>
 
+
+  <div id="loading_screen">
+    <div class="loading_box">
+      <p id="loading_text">Lade Spiel… 0%</p>
+      <div class="loading_bar_bg">
+        <div class="loading_bar_fill" id="loading_bar"></div>
+      </div>
+    </div>
+  </div>
+
+
   <div id="game_container">
+
+
     <div id="start_screen" class="start_screen">
       <button class="btn_fullscreen" onclick="toggleFullscreen()">⛶</button>
       <div class="start_buttons">
@@ -62,13 +77,16 @@
       </div>
     </div>
 
+
     <div id="controls_screen" class="gamecontrols_info_screen info_screen" style="display: none;">
       <div class="info_content scrollable">
+
         <h2>Steuerung</h2>
+
         <h3 class="gamecontrols_h3">PC / Tastatur</h3>
         <div class="gamecontrols_control_list">
           <div class="gamecontrols_control_row">
-            <span class="gamecontrols_key_icon"> &lt; </span>
+            <span class="gamecontrols_key_icon">&lt;</span>
             <span class="gamecontrols_control_text">nach links laufen</span>
           </div>
           <div class="gamecontrols_control_row">
@@ -76,7 +94,7 @@
             <span class="gamecontrols_control_text">nach rechts laufen</span>
           </div>
           <div class="gamecontrols_control_row">
-            <span class="gamecontrols_key_icon langtext">Space</span>
+            <span class="gamecontrols_key_icon">Space</span>
             <span class="gamecontrols_control_text">springen</span>
           </div>
           <div class="gamecontrols_control_row">
@@ -84,6 +102,7 @@
             <span class="gamecontrols_control_text">Flasche werfen</span>
           </div>
         </div>
+
         <h3 class="gamecontrols_h3">Smartphone / Tablet</h3>
         <div class="gamecontrols_control_list">
           <div class="gamecontrols_control_row">
@@ -103,15 +122,18 @@
             <span class="gamecontrols_control_text">Flasche werfen</span>
           </div>
         </div>
+
         <button onclick="closeInfo()">Zurück</button>
       </div>
     </div>
 
+
     <div id="info_screen" class="info_screen" style="display: none;">
       <div class="info_content scrollable">
+   
         <h2>Spielstruktur</h2>
         <h3>Hühner:</h3><br>
-        <p> Berührungen mit Hühnern schaden deiner Gesundheit.<br>
+        <p>Berührungen mit Hühnern schaden deiner Gesundheit.<br>
           Du kannst die Hühner unschädlich machen, indem du:<br>
           - ein kleines Huhn mit einer Flasche triffst<br>
           - ein großes Huhn indem du darauf springst.</p>
@@ -137,22 +159,29 @@
           - Du hast keine Gesundheit mehr<br>
           - Du hast zu viele Fehlwürfe und keine Flaschen mehr<br>
           Ohne Flaschen kannst du nicht kämpfen und somit nicht mehr gewinnen</p>
-        <button onclick="closeInfo()">Zurück</button>
+     <button onclick="closeInfo()">Zurück</button>
       </div>
     </div>
 
 
-    <div class="canvas_container" style="display: none;">
+       <div class="canvas_container" style="display: none; position: relative;">
+
+      <canvas id="canvas" width="720" height="480"></canvas>
+
       <div class="audio_controls">
         <button id="mute_btn_game" onclick="toggleMute()">🔊</button>
         <input id="volume_slider_game" type="range" min="0" max="1" step="0.01" value="1"
           onchange="setVolume(this.value)">
       </div>
-      <canvas id="canvas" width="720" height="480"></canvas>
+
       <button id="restart_btn" onclick="restartGame()" style="display: none;">Restart Game</button>
     </div>
+
+ 
     <button id="game_fullscreen_btn" class="btn_fullscreen" onclick="toggleFullscreen()">⛶</button>
-    <div class="mobile_controls">
+
+
+     <div class="mobile_controls">
       <div class="control_group left_controls">
         <button id="btn_move_left">◀</button>
         <button id="btn_move_right">▶</button>
@@ -163,6 +192,7 @@
       </div>
     </div>
 
+
     <div id="impressum_screen" class="info_screen impressum_normal" style="display: none;">
       <div class="impressum_content">
         <h1 class="impressum_h1">Impressum</h1>
@@ -171,12 +201,19 @@
           58540 Meinerzhagen</p>
         <h2 class="impressum_h2">Kontakt</h2>
         <p class="impressum_p">Telefon: +49 (0) 155 61 692 056</p>
-        <p class="impressum_p"> E-Mail: <a href="mailto:frankmeckel@ymail.com">frankmeckel@ymail.com</a></p>
-        <p class="impressum_p">Quelle: <a href="https://www.e-recht24.de" target="_blank">www.e-recht24.de</a></p>
+        <p class="impressum_p">
+          E-Mail:
+          <a href="mailto:frankmeckel@ymail.com">frankmeckel@ymail.com</a>
+        </p>
+        <p class="impressum_p">
+          Quelle:
+          <a href="https://www.e-recht24.de" target="_blank">www.e-recht24.de</a>
+        </p>
         <button class="btn_impressum" onclick="closeImpressum()">Zurück</button>
       </div>
     </div>
-  </div>
-</body>
 
+  </div>
+
+</body>
 </html>

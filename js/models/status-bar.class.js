@@ -41,19 +41,24 @@ class StatusBar extends DrawableObject {
   }
 
 
-  /**
-   * Sets image from cache or warns if missing.
-   * @param {string} path - Image path.
-   */
-  setImageFromCacheOrWarn(path) {
-    if (this.imageCache[path]) {
-      this.img = this.imageCache[path];
-    } else {
-      console.warn("Image not loaded:", path);
-      this.img = new Image(); // Prevents crash
+ /**
+ * Sets image from cache or warns if missing.
+ * @param {string} path - Image path.
+ */
+setImageFromCacheOrWarn(path) {
+    if (!path) {
+        console.error("setImageFromCacheOrWarn: path is undefined oder leer!", path);
+        this.img = new Image(); // Verhindert Absturz
+        return;
     }
-  }
 
+    if (this.imageCache[path]) {
+        this.img = this.imageCache[path];
+    } else {
+        console.warn("Image not loaded:", path);
+        this.img = new Image(); // Verhindert Crash
+    }
+}
   
   /**
    * Determines image index based on percentage.

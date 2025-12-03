@@ -23,17 +23,22 @@ class DrawableObject {
      * @param {string[]} arr - Array of image paths.
      * @returns {Promise} Resolves when all images are loaded.
      */
-    loadImages(arr) {
-        let promises = arr.map(path => {
-            return new Promise((resolve) => {
-                let img = new Image();
-                img.onload = () => resolve();
-                img.src = path;
-                this.imageCache[path] = img;
-            });
+loadImages(arr, progressCallback) {
+    let loaded = 0;
+    let promises = arr.map(path => {
+        return new Promise((resolve) => {
+            let img = new Image();
+            img.onload = () => {
+                loaded++;
+                if (progressCallback) progressCallback(loaded / arr.length);
+                resolve();
+            };
+            img.src = path;
+            this.imageCache[path] = img;
         });
-        return Promise.all(promises);
-    }
+    });
+    return Promise.all(promises);
+}
 
 
     /**
