@@ -298,11 +298,12 @@ function createDrawableInstances() {
  */
 async function restartGame() {
     resetWorldAndCanvas();
-    showGameUIElements();
+    showGameUI(); // <-- hier den alten Funktionsnamen ersetzen
     await clearAndDrawBackground();
     await initializeGame();
     fullscreenRestore();
 }
+
 
 
 /**
