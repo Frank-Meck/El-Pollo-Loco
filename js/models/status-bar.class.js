@@ -60,6 +60,7 @@ setImageFromCacheOrWarn(path) {
     }
 }
   
+
   /**
    * Determines image index based on percentage.
    * @returns {number} Image index.

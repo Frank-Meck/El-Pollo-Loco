@@ -1,11 +1,11 @@
 
 .mobile_controls {
   display: none; 
-  position: absolute; 
+  position: absolute;
   width: 100%;
   justify-content: space-between;
   pointer-events: auto;
-  z-index: 50; 
+  z-index: 50;
 }
 
 
@@ -30,14 +30,13 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .mobile_controls button:hover {
-  background: rgba(255, 102, 0, 0.9);
+  background: rgba(255, 102, 0, 0.95);
   box-shadow: 0 0 12px 3px rgba(255, 69, 0, 0.7);
 }
-
 
 .canvas_container {
   display: flex;
@@ -79,12 +78,5 @@ canvas {
 @media (orientation: landscape) {
   .mobile_controls {
     bottom: 10px;
-  }
-}
-
-
-@media (max-width: 1280px) { 
-  .mobile_controls {
-
   }
 }

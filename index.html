@@ -13,7 +13,9 @@
   <link rel="stylesheet" href="./css/basic_settings.css">
   <link rel="stylesheet" href="./css/mobile-control.css">
 
-    <script src="./js/models/impressum.js" defer></script>
+
+
+  <script src="./js/models/impressum.js" defer></script>
   <script src="./js/models/audio.js" defer></script>
   <script src="./js/models/drawable-object.class.js" defer></script>
   <script src="./js/models/moveable-object.class.js" defer></script>
@@ -37,14 +39,21 @@
   <script src="./js/models/world.class.js" defer></script>
   <script src="./js/models/world.collisions.js" defer></script>
   <script src="./js/models/keyboard.class.js" defer></script>
+
+  <script src="./js/game.core.js" defer></script>
+  <script src="./js/game.input.js" defer></script>
+  <script src="./js/game.ui.js" defer></script>
+
+  <!-- 
   <script src="./js/game.js" defer></script>
+  -->
   <script src="./js/models/start-screen.class.js" defer></script>
   <script src="./js/models/mobile-check.js"></script>
 </head>
 
 <body>
 
- 
+
   <div id="rotate_message">
     <div class="rotate_content">
       <p class="mobile_info">Bitte Smartphone drehen, um zu spielen</p>
@@ -66,7 +75,7 @@
 
 
     <div id="start_screen" class="start_screen">
-      <button class="btn_fullscreen" onclick="toggleFullscreen()">⛶</button>
+
       <div class="start_buttons">
         <button id="start_btn" onclick="startGame()">Spiel starten</button>
         <button id="controls_btn" onclick="showControls()">Steuerung</button>
@@ -130,7 +139,7 @@
 
     <div id="info_screen" class="info_screen" style="display: none;">
       <div class="info_content scrollable">
-   
+
         <h2>Spielstruktur</h2>
         <h3>Hühner:</h3><br>
         <p>Berührungen mit Hühnern schaden deiner Gesundheit.<br>
@@ -159,12 +168,12 @@
           - Du hast keine Gesundheit mehr<br>
           - Du hast zu viele Fehlwürfe und keine Flaschen mehr<br>
           Ohne Flaschen kannst du nicht kämpfen und somit nicht mehr gewinnen</p>
-     <button onclick="closeInfo()">Zurück</button>
+        <button onclick="closeInfo()">Zurück</button>
       </div>
     </div>
 
 
-       <div class="canvas_container" style="display: none; position: relative;">
+    <div class="canvas_container" style="display: none; position: relative;">
 
       <canvas id="canvas" width="720" height="480"></canvas>
 
@@ -177,11 +186,7 @@
       <button id="restart_btn" onclick="restartGame()" style="display: none;">Restart Game</button>
     </div>
 
- 
-    <button id="game_fullscreen_btn" class="btn_fullscreen" onclick="toggleFullscreen()">⛶</button>
-
-
-     <div class="mobile_controls">
+    <div class="mobile_controls">
       <div class="control_group left_controls">
         <button id="btn_move_left">◀</button>
         <button id="btn_move_right">▶</button>
@@ -216,4 +221,5 @@
   </div>
 
 </body>
+
 </html>

@@ -345,7 +345,7 @@ World.prototype.showGameControls = function () {
  */
 World.prototype.showEndScreenAfterDelay = function (won) {
   setTimeout(() => {
-    this.showRestartButton();
+   // this.showRestartButton();
     this.displayEndImage(won);
     if (won) this.playSound('win');
   }, 1000);

@@ -37,22 +37,23 @@ body {
 :fullscreen #game_container,
 :-webkit-full-screen #game_container,
 :-moz-full-screen #game_container {
-    width: 100vw;
-    height: 100vh;
+    width: 100vw !important;
+    height: 100vh !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    border-radius: 0 !important;
 }
 
 .canvas_container {
-  position: relative;
-  width: 100%;
-  height: 100vh; 
-  overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100vh; 
+    overflow: hidden;
 }
 
 canvas {
-    width: 100%;
-    height: 100%;
     display: block;
-    background-color: black;
 }
 
 .start_screen {
@@ -78,7 +79,6 @@ canvas {
     margin-bottom: 10px;
 }
 
-
 .info_content.scrollable::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.2);
 }
@@ -90,15 +90,12 @@ h1 {
     color: white;
 }
 
-
 h2 {
     font-size: 36px;
     letter-spacing: 5px;
     text-align: center;
     color: rgb(92, 6, 6);
-
 }
-
 
 h3 {
     font-size: 28px;
@@ -107,7 +104,6 @@ h3 {
     color: rgb(243, 239, 10);
     margin-bottom: 0;
 }
-
 
 p {
     font-size: 24px;
@@ -123,44 +119,57 @@ p {
     display: none;
 }
 
+#loading_screen {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.2);
+    display: none; 
+    z-index : 999999;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+}
 
 .loading_box {
-  background: rgba(10,10,10,0.9);
-  border-radius: 12px;
-  padding: 30px;
-  width: 300px;
-  text-align: center;
-  color: white;
-  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    margin: 0 auto;
+
 }
 
 #loading_text {
-  font-size: 18px;
-  margin-bottom: 15px;
-  color: white;
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: white;
 }
 
 .loading_bar_bg {
-  width: 100%;
-  height: 16px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 8px;
-  overflow: hidden;
+    width: 300px;
+    height: 20px;
+    background-color: #444;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
 }
 
 .loading_bar_fill {
-  width: 0%;
-  height: 100%;
-  background: linear-gradient(90deg, #ffcc00, #ff6600);
-  transition: width 0.2s ease;
+    width: 0%;
+    height: 100%;
+    background-color: yellow;
+    transition: width 0.2s ease;
 }
-#loading_screen {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.2);
-  display: none;
-  z-index: 999999;
-  align-items: center;
-  justify-content: center;
-  pointer-events: all;
+
+
+.mobile_controls {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: auto;
+    z-index: 20;
+}
+
+.mobile_controls .control_group button {
+    font-size: 2rem;
+    padding: 10px;
+    pointer-events: auto;
 }
