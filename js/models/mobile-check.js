@@ -95,7 +95,7 @@ function checkOrientation() {
  */
 function showRotateMessage(message, container) {
   message.style.display = 'flex';
-  container.style.visibility = 'hidden';  // ✅ NICHT display:none
+  container.style.visibility = 'hidden';  
 }
 
 
@@ -117,7 +117,7 @@ function handleResizeAndOrientation() {
 }
 
 
-// Register events
+
 window.addEventListener('load', handleResizeAndOrientation);
 window.addEventListener('resize', handleResizeAndOrientation);
 window.addEventListener('orientationchange', handleResizeAndOrientation);

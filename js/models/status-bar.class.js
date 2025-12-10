@@ -48,7 +48,7 @@ class StatusBar extends DrawableObject {
 setImageFromCacheOrWarn(path) {
     if (!path) {
         console.error("setImageFromCacheOrWarn: path is undefined oder leer!", path);
-        this.img = new Image(); // Verhindert Absturz
+        this.img = new Image(); 
         return;
     }
 
@@ -56,7 +56,7 @@ setImageFromCacheOrWarn(path) {
         this.img = this.imageCache[path];
     } else {
         console.warn("Image not loaded:", path);
-        this.img = new Image(); // Verhindert Crash
+        this.img = new Image(); 
     }
 }
   

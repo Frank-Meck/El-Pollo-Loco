@@ -45,18 +45,20 @@ World.prototype.checkBottleHitsEnemies = function () {
  */
 World.prototype.checkCharacterStompsEnemy = function () {
   this.level.enemies = this.level.enemies.filter(enemy => {
-    if (this.isValidChickenEnemy(enemy) && this.character.isColliding(enemy)) {
+    if (!this.isValidChickenEnemy(enemy)) return true;
+
+    if (this.character.isColliding(enemy)) {
       if (this.isCharacterStompingEnemy(enemy)) {
         this.handleEnemyStomp(enemy);
         return false;
       } else {
-        this.handleCharacterHit();
+        this.handleCharacterHit(enemy);
+        return true;
       }
     }
     return true;
   });
 };
-
 
 /**
  * Checks whether an enemy is a valid Chicken type for stomping.
@@ -74,14 +76,22 @@ World.prototype.isValidChickenEnemy = function (enemy) {
  * @returns {boolean}
  */
 World.prototype.isCharacterStompingEnemy = function (enemy) {
-  const horizontallyAligned = this.character.x + this.character.width > enemy.x &&
+  const horizontallyAligned =
+    this.character.x + this.character.width > enemy.x &&
     this.character.x < enemy.x + enemy.width;
-  const verticallyAbove = this.character.lastY + this.character.height <= enemy.y + 40;
-  const standsOnTop = this.character.y + this.character.height >= enemy.y &&
-    this.character.y + this.character.height <= enemy.y + 40 &&
-    horizontallyAligned;
+
+  const verticallyAbove =
+    this.character.lastY + this.character.height <= enemy.y + 40;
+
   const isFalling = this.character.speedY < 0;
-  return (verticallyAbove && isFalling && horizontallyAligned) || standsOnTop;
+
+  const standsOnTop =
+    this.character.y + this.character.height >= enemy.y &&
+    this.character.y + this.character.height <= enemy.y + 40 &&
+    horizontallyAligned &&
+    isFalling;
+
+  return (verticallyAbove && horizontallyAligned && isFalling) || standsOnTop;
 };
 
 
@@ -100,13 +110,13 @@ World.prototype.handleEnemyStomp = function (enemy) {
  */
 World.prototype.handleCharacterHit = function () {
   if (!this.lastHitTime) this.lastHitTime = 0;
-  if (!this.hitCooldown) this.hitCooldown = 100; // 1 second cooldown
+  if (!this.hitCooldown) this.hitCooldown = 100;
 
   const now = Date.now();
   if (now - this.lastHitTime >= this.hitCooldown) {
     this.character.hit();
     this.statusBar.setPercentage(this.character.energy);
-    this.lastHitTime = now; // remember last hit time
+    this.lastHitTime = now;
   }
 };
 
@@ -345,7 +355,7 @@ World.prototype.showGameControls = function () {
  */
 World.prototype.showEndScreenAfterDelay = function (won) {
   setTimeout(() => {
-   // this.showRestartButton();
+
     this.displayEndImage(won);
     if (won) this.playSound('win');
   }, 1000);
@@ -362,8 +372,8 @@ World.prototype.restartButtonTimeout = null;
 World.prototype.showRestartButton = function () {
   const restartBtn = document.getElementById('restart_btn');
   if (restartBtn) {
-    restartBtn.style.display = 'inline-block';   // make visible
-    restartBtn.onclick = () => restartGame();    // then activate
+    restartBtn.style.display = 'inline-block';
+    restartBtn.onclick = () => restartGame();
   }
 };
 

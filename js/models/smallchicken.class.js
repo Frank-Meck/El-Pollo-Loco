@@ -1,5 +1,5 @@
 class SmallChicken extends MoveableObject {
-    y = 380;
+    y = 400;
     height = 40;
     width = 60;
 
@@ -59,7 +59,7 @@ SmallChicken.spawnAtFixedOffset = function (world, startX) {
  * @returns {number} Number of chickens to spawn.
  */
 SmallChicken.calculateChickenAmount = function () {
-    return Math.floor(Math.random() * 3) + 1;  // 1 to 3 chickens
+    return Math.floor(Math.random() * 3) + 1; 
 }
 
 
@@ -71,7 +71,7 @@ SmallChicken.calculateChickenAmount = function () {
  */
 SmallChicken.spawnChickensAtCurrentX = function (world, currentX, amount) {
     for (let i = 0; i < amount; i++) {
-        const x = currentX + i * 30; // 30px spacing between chickens
+        const x = currentX + i * 30; 
         const chicken = new SmallChicken(x);
         world.level.enemies.push(chicken);
     }

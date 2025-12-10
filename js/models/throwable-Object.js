@@ -12,7 +12,7 @@ class ThrowableObject extends MoveableObject {
     this.y = y;
     this.height = 60;
     this.width = 50;
-    this.throwObject(); // For testing, throws object immediately
+    this.throwObject(); 
   }
 
 
@@ -20,8 +20,8 @@ class ThrowableObject extends MoveableObject {
    * Starts the throwing action by setting upward speed and gravity.
    */
   throwObject() {
-    this.speedY = 30;  // Moves upwards
-    this.applyGravity();  // Makes it fall down afterwards
+    this.speedY = 30;  
+    this.applyGravity();  
     this.startThrowInterval();
   }
 

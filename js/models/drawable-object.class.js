@@ -4,7 +4,7 @@ class DrawableObject {
     img;
     height = 150;
     width = 100;
-    imageCache = {};  // Stores loaded images
+    imageCache = {};  
     currentImage = 0;
 
 
