@@ -167,9 +167,14 @@ class Character extends MoveableObject {
      */
     updateGravity() {
         this.lastY = this.y;
-        if (this.isAboveGround() || this.speedY > 0) {
-            this.y -= this.speedY;
-            this.speedY -= this.acceleration;
+
+        this.y -= this.speedY;
+        this.speedY -= this.acceleration;
+
+        const groundY = 140;
+        if (this.y > groundY) {
+            this.y = groundY;
+            this.speedY = 0;
         }
     }
 
@@ -342,7 +347,7 @@ class Character extends MoveableObject {
         this.speedY = 30;
     }
 
-    
+
     /**
      * Returns true if character is hurt
      */
